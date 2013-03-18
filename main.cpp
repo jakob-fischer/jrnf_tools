@@ -398,10 +398,10 @@ int main(int argc, const char* argv[]) {
 	
 	    cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
 	
-	    if(cl.have_param("rnet")) {
-	        std::string rnet=cl.get_param("rnet");
-	        cout << "Writing jrnf-reaction network to " << rnet << endl;
-	        write_jrnf_reaction_n(rnet, sp, re);
+	    if(cl.have_param("out")) {
+	        std::string rnet=cl.get_param("out");
+	        cout << "Writing jrnf-reaction network to " << out << endl;
+	        write_jrnf_reaction_n(out, sp, re);
 	    }
     }
     

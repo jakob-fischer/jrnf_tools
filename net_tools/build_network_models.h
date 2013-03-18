@@ -175,7 +175,7 @@ void build_model_Yung_99(std::vector<species> &sp, std::vector<reaction> &re) {
 	size_t iCH3Br=83;
 	sp.push_back(species(sp.size(), "F"));
 	size_t iF=84;
-	sp.push_back(species(sp.size(), "HFl"));
+	sp.push_back(species(sp.size(), "HF"));
 	size_t iHF=85;
 	sp.push_back(species(sp.size(), "CO"));
 	size_t iCO=86;
@@ -2722,8 +2722,8 @@ void build_model_Yung_99(std::vector<species> &sp, std::vector<reaction> &re) {
 	re.push_back(reaction()); 
 	re.back().add_educt(iHO2, 1);
 	re.back().add_educt(iCl, 1);
-	re.back().add_product(iHOCl, 1);
-	re.back().add_product(iO2, 1);
+	re.back().add_product(iOH, 1);
+	re.back().add_product(iClO, 1);
 	re.back().sorder(4.1e-11, 450, 200, 9.1e-12, 2.0);
 		
 	// R285
@@ -3478,7 +3478,7 @@ void build_model_Yung_99(std::vector<species> &sp, std::vector<reaction> &re) {
 	re.back().add_educt(iBr, 1);
 	re.back().add_educt(iH2O2, 1);
 	re.back().add_product(iHBr, 1);
-	re.back().add_product(iH2O, 1);
+	re.back().add_product(iHO2, 1);
 	re.back().sorder(1.0e-11, 3000, 0, 5.0e-16, 0);
 	
 	// R383
@@ -3550,14 +3550,6 @@ void build_model_Yung_99(std::vector<species> &sp, std::vector<reaction> &re) {
 	re.back().add_product(iOClO, 1);
 	re.back().sorder(1.6e-12, -430, 200, 6.8e-12, 1.25);
 	
-	// R392
-	re.push_back(reaction()); 
-	re.back().add_educt(iBrO, 1);
-	re.back().add_educt(iClO, 1);
-	re.back().add_product(iBr, 1);
-	re.back().add_product(iOClO, 1);
-	re.back().sorder(1.6e-12, -430, 200, 6.8e-12, 1.25);
-
 	// R393
 	re.push_back(reaction()); 
 	re.back().add_educt(iBrO, 1);
@@ -3991,7 +3983,7 @@ void build_model_Yung_99(std::vector<species> &sp, std::vector<reaction> &re) {
 	re.back().add_educt(iClO, 1);
 	re.back().add_educt(iSO, 1);
 	re.back().add_product(iCl, 1);
-	re.back().add_educt(iSO2, 1);
+	re.back().add_product(iSO2, 1);
 	re.back().sorder(2.8e-11, 0, 50, 2.8e-11, 1.3);
 	
 	// R451

@@ -399,7 +399,7 @@ int main(int argc, const char* argv[]) {
 	    cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
 	
 	    if(cl.have_param("out")) {
-	        std::string rnet=cl.get_param("out");
+	        std::string out=cl.get_param("out");
 	        cout << "Writing jrnf-reaction network to " << out << endl;
 	        write_jrnf_reaction_n(out, sp, re);
 	    }

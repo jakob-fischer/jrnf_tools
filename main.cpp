@@ -4,8 +4,8 @@
  * Programm with C++ Tools for generating different types of complex
  * networks / reaction networks and transforming between them.
  * 
- * TODO: Document. Handling of reversible reactions should be more 
- * clear...
+ * TODO: Document. Handling of reversible reactions should be more clear...
+ * TODO: Complex network generation of 2-2 networks should have virtual links included in connectivity check
  */
 
 #include <iostream>
@@ -538,67 +538,58 @@ int main(int argc, const char* argv[]) {
      
     if(cl.have_param("create_ER_NM")) {
         size_t N=cl.get_param_i("N");
-	    size_t M=cl.get_param_i("M");
-	    std::string out= cl.have_param("out") ? cl.get_param("out") : "ER_NM_network.jrnf";
-	    bool ensure_connect=cl.have_param("ensure_connect");
-	    bool drop_minor_pts=cl.have_param("drop_minor_parts");
-	    bool self_loop=cl.have_param("self_loop");
-	    bool directed=cl.have_param("directed");
-	    bool allow_multiple=cl.have_param("allow_multiple");
+	size_t M=cl.get_param_i("M");
+	std::string out= cl.have_param("out") ? cl.get_param("out") : "ER_NM_network.jrnf";
+	bool ensure_connect=cl.have_param("ensure_connect");
+	bool self_loop=cl.have_param("self_loop");
+	bool directed=cl.have_param("directed");
+	bool allow_multiple=cl.have_param("allow_multiple");
       
         std::cout << "mode: create_ER_NM  N=" << N << "   M=" << M << "   out=" << out << std::endl;
 	    
-	    if(ensure_connect)
-	        std::cout << "ensure_connect is active!" << std::endl;
+	if(ensure_connect)
+	    std::cout << "ensure_connect is active!" << std::endl;
 	
-	    if(drop_minor_pts)
-	        std::cout << "drop_minor_parts is active!" << std::endl;
+        if(self_loop)
+	    std::cout << "self loop is active!" << std::endl;
 	
-	    if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+        if(directed)
+	    std::cout << "directed is active!" << std::endl;
 	
-	    if(directed)
-	        std::cout << "directed is active!" << std::endl;
-	
-	    if(allow_multiple)
-	        std::cout << "allow multiple is active!" << std::endl;
+	if(allow_multiple)
+	    std::cout << "allow multiple is active!" << std::endl;
 		
 	
-	    bool connected=false;
-	    std::vector< pair<size_t, size_t> > edges;
+	bool connected=false;
 	
-	    while(!connected) {
-	        std::cout << "creating network" << std::endl;
+	while(!connected) {
+	    std::cout << "creating network" << std::endl;
 	
-	        edges.clear();
+     	    std::vector< pair<size_t, size_t> > edges;
             create_erdos_renyi(edges, N, M,allow_multiple,self_loop, directed);
 	    
-	        cout << "Checking connectivity / calculating clusters." << endl;
+	    cout << "Checking connectivity / calculating clusters." << endl;
 	    
-	        bd_network nw(N, edges);
-	        nw.do_analyis();
+	    bd_network nw(N, edges);
+	    nw.do_analyis();
 	    
-	        if(nw.is_connected() || !ensure_connect) {
-	            connected = true;
+	    if(nw.is_connected() || !ensure_connect) {
+	        connected = true;
 		
-	            vector<species> sp;
-	            vector<reaction> re;
+	        vector<species> sp;
+	        vector<reaction> re;
 		
-		        if(!drop_minor_pts || nw.is_connected()) {
-		            cout << "Simple output!" << std::endl;  
+                cout << "Simple output!" << std::endl;  
 		    
-		        for(size_t t=0; t<N; ++t) 
-		            rm_add_species_ne(sp, t);
+	        for(size_t t=0; t<N; ++t) 
+		    rm_add_species_ne(sp, t);
 		    
-		        for(size_t t=0; t<edges.size(); ++t) 
-		            rm_1to1rev(re, edges[t].first, edges[t].second);  
-		        } else {
-		            cout << "Output with dropping! NOT IMPLEMENTED YET!" << std::endl; // TODO 
-		        }
-		
-	        write_jrnf_reaction_n(out, sp, re);
-	        }
+	        for(size_t t=0; t<edges.size(); ++t) 
+		    rm_1to1rev(re, edges[t].first, edges[t].second);  
+            
+		write_jrnf_reaction_n(out, sp, re);
 	    }
+        }
     }
     
    
@@ -606,96 +597,97 @@ int main(int argc, const char* argv[]) {
    
     if(cl.have_param("create_ER_NM_bi_C")) {
         size_t N=cl.get_param_i("N");
-	    size_t M=cl.get_param_i("M");
-	    size_t C=cl.get_param_i("C");
-	    std::string out= cl.have_param("out") ? cl.get_param("out") : "bi_nMC_network.jrnf";
-	    bool ensure_connect=cl.have_param("ensure_connect");
-	    bool drop_minor_pts=cl.have_param("drop_minor_parts");
-	    bool self_loop=cl.have_param("self_loop");
-	    bool directed=cl.have_param("directed");
-	    bool allow_multiple=cl.have_param("allow_multiple");
+	size_t M=cl.get_param_i("M");
+	size_t C=cl.get_param_i("C");
+	std::string out= cl.have_param("out") ? cl.get_param("out") : "bi_nMC_network.jrnf";
+	bool ensure_connect=cl.have_param("ensure_connect");
+	bool self_loop=cl.have_param("self_loop");
+	bool directed=cl.have_param("directed");
+	bool allow_multiple=cl.have_param("allow_multiple");
+        bool limit_coupling=cl.have_param("limit_coupling");
+
 	
-	    // Energy distribution of species and for activation energy
-	    // TODO Not implemented yet
-	    size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
-	                            // 1 <-> logarithmic ln([0.01,1])
-	    size_t aener_dist=0;    // 0 <-> linear [0, 1]
-	                            // 1 <-> logarithmic -ln([0.01,1])
+	// Energy distribution of species and for activation energy
+	// TODO Not implemented yet
+	size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
+	                        // 1 <-> logarithmic ln([0.01,1])
+	size_t aener_dist=0;    // 0 <-> linear [0, 1]
+	                        // 1 <-> logarithmic -ln([0.01,1])
 	
-	       
-	    std::cout << "mode: create_ER_NM_bi_C  N=" << N << "   M=";
-	    std::cout << M << "    C=" << C << "    out=" << out << std::endl;
+	std::cout << "mode: create_ER_NM_bi_C  N=" << N << "   M=";
+	std::cout << M << "    C=" << C << "    out=" << out << std::endl;
 	
-	    
-	    if(ensure_connect)
-	        std::cout << "ensure_connect is active!" << std::endl;
+	if(ensure_connect)
+	    std::cout << "ensure_connect is active!" << std::endl;
 	
-	    if(drop_minor_pts)
-	        std::cout << "drop_minor_parts is active!" << std::endl;
+	if(self_loop)
+	    std::cout << "self loop is active!" << std::endl;
 	
-	    if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+	if(directed)
+	    std::cout << "directed is active!" << std::endl;
 	
-	    if(directed)
-	        std::cout << "directed is active!" << std::endl;
-	
-	    if(allow_multiple)
-	        std::cout << "allow multiple is active!" << std::endl;
+	if(allow_multiple)
+	    std::cout << "allow multiple is active!" << std::endl;
+
+        if(limit_coupling)
+            std::cout << "limit coupling is active!" << std::endl;
 
         cout << "Energy distribution is " << energy_dist;
         cout << " and activation energy dist is " << aener_dist << endl;
 	
-  	    bool done=false;
-	    while(!done) {
-            std::vector< pair<size_t, size_t> > edges;
-	        create_erdos_renyi(edges, N, M,allow_multiple,self_loop, directed);
+	bool connected=false;
+	
+	while(!connected) {
+	    std::cout << "creating network" << std::endl;
+	
+     	    std::vector< pair<size_t, size_t> > edges, couples;
+	    create_erdos_renyi(edges, N, M, allow_multiple,self_loop, directed);
+            couple_erdos_renyi(couples, C, edges, limit_coupling, allow_multiple, self_loop, directed);
 	    
-	        cout << "Checking connectivity / calculating clusters." << endl;
+	    cout << "Checking connectivity / calculating clusters." << endl;
 	    
-	        bd_network nw(N, edges);
-	        nw.do_analyis();
-	        
-	        if(!nw.is_connected() && ensure_connect) {
-	            cout << "Redoing: Because of ensure_connect." << endl;
-	        } else {
-			    std::vector< pair<size_t, size_t> > couples;
-			    couple_erdos_renyi(couples, C, edges);	
-				
-	            vector<species> sp;
-	            vector<reaction> re;
-		        done=true;
+	    bd_network nw(N, edges);
+	    nw.do_analyis();
+	    
+	    if(nw.is_connected() || !ensure_connect) {
+	        connected = true;
 		
-	            for(size_t t=0; t<N; ++t) 
-		            rm_add_species(sp, t, energy_dist);    
+	        vector<species> sp;
+	        vector<reaction> re;
 		
-		        // Combine network link to "a+b->c+d"-reactions
-		        for(size_t i=0; i<couples.size(); ++i) {
-		            size_t r1=couples[i].first;
-		            size_t r2=couples[i].second;
+                cout << "Output!" << std::endl;  
+
+	        for(size_t t=0; t<N; ++t) 
+		    rm_add_species(sp, t, energy_dist);    
+		
+		// Combine network link to "a+b->c+d"-reactions
+		for(size_t i=0; i<couples.size(); ++i) {
+		    size_t r1=couples[i].first;
+		    size_t r2=couples[i].second;
 		    
-		            size_t a(edges[r1].first), b(edges[r2].first), 
-			               c(edges[r1].second), d(edges[r2].second);
+		    size_t a(edges[r1].first), b(edges[r2].first), 
+			   c(edges[r1].second), d(edges[r2].second);
 			   
-	                // create reaction using the macro function
-		            rm_2to2rev(re, a, b, c, d, aener_dist);
+	            // create reaction using the macro function
+		    rm_2to2rev(re, a, b, c, d, aener_dist);
 		    
-		            // removing links connected from the edge list
-		            edges.erase(edges.begin()+r2);
-		            edges.erase(edges.begin()+r1);		  
-		        }
+		    // removing links connected from the edge list
+		    edges.erase(edges.begin()+r2);
+		    edges.erase(edges.begin()+r1);		  
+		}
 		
     
                 // "Translate" all those unary reactions ("A->B")
-		        for(size_t t=0; t<edges.size(); ++t) {
-		            size_t a(edges[t].first), b(edges[t].second);
+		for(size_t t=0; t<edges.size(); ++t) {
+		    size_t a(edges[t].first), b(edges[t].second);
 			   
-	                // create reaction using the macro function
-		            rm_1to1rev(re, a, b, aener_dist);
-		        }
+	            // create reaction using the macro function
+		    rm_1to1rev(re, a, b, aener_dist);
+		}
 			
-	            write_jrnf_reaction_n(out, sp, re);
-	        }
+                write_jrnf_reaction_n(out, sp, re);	         
 	    }
+        }
     }
 
    
@@ -712,17 +704,13 @@ int main(int argc, const char* argv[]) {
 	size_t M=cl.get_param_i("M");
 	std::string out= cl.have_param("out") ? cl.get_param("out") : "BA_NM_network.jrnf";
 	bool ensure_connect=cl.have_param("ensure_connect");
-	bool drop_minor_pts=cl.have_param("drop_minor_parts");
 	bool self_loop=cl.have_param("self_loop");
 	bool directed=cl.have_param("directed");
 	bool allow_multiple=cl.have_param("allow_multiple");
       
-    std::cout << "mode: create_BA_NM  N=" << N << "   M=" << M << "   out=" << out << std::endl;
+        std::cout << "mode: create_BA_NM  N=" << N << "   M=" << M << "   out=" << out << std::endl;
 	if(ensure_connect)
 	    std::cout << "ensure_connect is active!" << std::endl;
-	
-	if(drop_minor_pts)
-	    std::cout << "drop_minor_parts is active!" << std::endl;
 	
 	if(self_loop)
 	    std::cout << "self loop is active!" << std::endl;
@@ -735,13 +723,12 @@ int main(int argc, const char* argv[]) {
 		
 	
 	bool connected=false;
-	std::vector< pair<size_t, size_t> > edges;
-	
+
 	while(!connected) {
 	    std::cout << "creating network" << std::endl;
 	
-	    edges.clear();
-        create_barabasi_albert(edges, N, M,allow_multiple,self_loop, directed);
+     	    std::vector< pair<size_t, size_t> > edges;
+            create_barabasi_albert(edges, N, M,allow_multiple,self_loop, directed);
 	    
 	    cout << "Checking connectivity / calculating clusters." << endl;
 	    
@@ -754,120 +741,116 @@ int main(int argc, const char* argv[]) {
 	        vector<species> sp;
 	        vector<reaction> re;
 		
-		    if(!drop_minor_pts || nw.is_connected()) {
-		        cout << "Simple output!" << std::endl;  
+                cout << "Simple output!" << std::endl;  
 		    
-		        for(size_t t=0; t<N; ++t) 
-		            rm_add_species_ne(sp, t);
+	        for(size_t t=0; t<N; ++t) 
+		    rm_add_species_ne(sp, t);
 		    
-		        for(size_t t=0; t<edges.size(); ++t) 
-		            rm_1to1rev(re, edges[t].first, edges[t].second);  
-		        } else {
-		            cout << "Output with dropping! NOT IMPLEMENTED YET!" << std::endl; // TODO 
-		        }
-		
-	            write_jrnf_reaction_n(out, sp, re);
-	        }
+	        for(size_t t=0; t<edges.size(); ++t) 
+		    rm_1to1rev(re, edges[t].first, edges[t].second);  
+            
+		write_jrnf_reaction_n(out, sp, re);
 	    }
+        }
     }
     
     
     
     if(cl.have_param("create_BA_NM_bi_C")) {
         size_t N=cl.get_param_i("N");
-	    size_t M=cl.get_param_i("M");
-	    size_t C=cl.get_param_i("C");
-	    std::string out= cl.have_param("out") ? cl.get_param("out") : "bi_NMC_network.jrnf";
-	    bool ensure_connect=cl.have_param("ensure_connect");
-	    bool drop_minor_pts=cl.have_param("drop_minor_parts");
-	    bool self_loop=cl.have_param("self_loop");
-	    bool directed=cl.have_param("directed");
-	    bool allow_multiple=cl.have_param("allow_multiple");
+	size_t M=cl.get_param_i("M");
+	size_t C=cl.get_param_i("C");
+	std::string out= cl.have_param("out") ? cl.get_param("out") : "bi_NMC_network.jrnf";
+	bool ensure_connect=cl.have_param("ensure_connect");
+	bool self_loop=cl.have_param("self_loop");
+	bool directed=cl.have_param("directed");
+	bool allow_multiple=cl.have_param("allow_multiple");
+        bool limit_coupling=cl.have_param("limit_coupling");
 	
-	    // Energy distribution of species and for activation energy
-	    // TODO Not implemented yet
-	    size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
-	                            // 1 <-> logarithmic ln([0.01,1])
-	    size_t aener_dist=0;    // 0 <-> linear [0, 1]
-	                            // 1 <-> logarithmic -ln([0.01,1])
+	// Energy distribution of species and for activation energy
+	// TODO Not implemented yet
+	size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
+	                        // 1 <-> logarithmic ln([0.01,1])
+	size_t aener_dist=0;    // 0 <-> linear [0, 1]
+	                        // 1 <-> logarithmic -ln([0.01,1])
 	
 	       
-	    std::cout << "mode: create_BA_NM_bi_C  N=" << N << "   M=";
-	    std::cout << M << "    C=" << C << "    out=" << out << std::endl;
+	std::cout << "mode: create_BA_NM_bi_C  N=" << N << "   M=";
+	std::cout << M << "    C=" << C << "    out=" << out << std::endl;
 	
-	    
-	    if(ensure_connect)
-	        std::cout << "ensure_connect is active!" << std::endl;
+	if(ensure_connect)
+	    std::cout << "ensure_connect is active!" << std::endl;
 	
-	    if(drop_minor_pts)
-	        std::cout << "drop_minor_parts is active!" << std::endl;
+	if(self_loop)
+	    std::cout << "self loop is active!" << std::endl;
 	
-	    if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+	if(directed)
+	    std::cout << "directed is active!" << std::endl;
 	
-	    if(directed)
-	        std::cout << "directed is active!" << std::endl;
-	
-	    if(allow_multiple)
-	        std::cout << "allow multiple is active!" << std::endl;
+	if(allow_multiple)
+	    std::cout << "allow multiple is active!" << std::endl;
+
+        if(limit_coupling)
+            std::cout << "limit coupling is active!" << std::endl;
 
         cout << "Energy distribution is " << energy_dist;
         cout << " and activation energy dist is " << aener_dist << endl;
 	
-  	    bool done=false;
-	    while(!done) {
-            std::vector< pair<size_t, size_t> > edges;
-	        create_barabasi_albert(edges, N, M,allow_multiple,self_loop, directed);
+        bool connected=false;
+	
+	while(!connected) {
+	    std::cout << "creating network" << std::endl;
+	
+     	    std::vector< pair<size_t, size_t> > edges, couples;
+            create_barabasi_albert(edges, N, M,allow_multiple,self_loop, directed);
+            couple_barabasi_albert(couples, C, edges, limit_coupling, allow_multiple, self_loop, directed);
 	    
-	        cout << "Checking connectivity / calculating clusters." << endl;
+	    cout << "Checking connectivity / calculating clusters." << endl;
 	    
-	        bd_network nw(N, edges);
-	        nw.do_analyis();
-	        
-	        if(!nw.is_connected() && ensure_connect) {
-	            cout << "Redoing: Because of ensure_connect." << endl;
-	        } else {
-			    std::vector< pair<size_t, size_t> > couples;
-			    couple_barabasi_albert(couples, C, edges);	
-				
-	            vector<species> sp;
-	            vector<reaction> re;
-		        done=true;
+	    bd_network nw(N, edges);
+	    nw.do_analyis();
+	    
+	    if(nw.is_connected() || !ensure_connect) {
+	        connected = true;
 		
-	            for(size_t t=0; t<N; ++t) 
-		            rm_add_species(sp, t, energy_dist);    
+	        vector<species> sp;
+	        vector<reaction> re;
 		
-		        // Combine network link to "a+b->c+d"-reactions
-		        for(size_t i=0; i<couples.size(); ++i) {
-		            size_t r1=couples[i].first;
-		            size_t r2=couples[i].second;
+                cout << "Output!" << std::endl;  
+
+	        for(size_t t=0; t<N; ++t) 
+		    rm_add_species(sp, t, energy_dist);    
+		
+		// Combine network link to "a+b->c+d"-reactions
+		for(size_t i=0; i<couples.size(); ++i) {
+		    size_t r1=couples[i].first;
+		    size_t r2=couples[i].second;
 		    
-		            size_t a(edges[r1].first), b(edges[r2].first), 
-			               c(edges[r1].second), d(edges[r2].second);
+		    size_t a(edges[r1].first), b(edges[r2].first), 
+			   c(edges[r1].second), d(edges[r2].second);
 			   
-	                // create reaction using the macro function
-		            rm_2to2rev(re, a, b, c, d, aener_dist);
+	            // create reaction using the macro function
+		    rm_2to2rev(re, a, b, c, d, aener_dist);
 		    
-		            // removing links connected from the edge list
-		            edges.erase(edges.begin()+r2);
-		            edges.erase(edges.begin()+r1);		  
-		        }
+		    // removing links connected from the edge list
+		    edges.erase(edges.begin()+r2);
+		    edges.erase(edges.begin()+r1);		  
+		}
 		
     
                 // "Translate" all those unary reactions ("A->B")
-		        for(size_t t=0; t<edges.size(); ++t) {
-		            size_t a(edges[t].first), b(edges[t].second);
+		for(size_t t=0; t<edges.size(); ++t) {
+		    size_t a(edges[t].first), b(edges[t].second);
 			   
-	                // create reaction using the macro function
-		            rm_1to1rev(re, a, b, aener_dist);
-		        }
+	            // create reaction using the macro function
+		    rm_1to1rev(re, a, b, aener_dist);
+		}
 			
-	            write_jrnf_reaction_n(out, sp, re);
-	        }
+                write_jrnf_reaction_n(out, sp, re);	         
 	    }
+        }
     }
 
-    
     
     
     
@@ -878,166 +861,159 @@ int main(int argc, const char* argv[]) {
      
     if(cl.have_param("create_WS_NMalpha")) {
         size_t N=cl.get_param_i("N");
-	    size_t M=cl.get_param_i("M");
-	    double alpha=cl.get_param_d("alpha");
-	    std::string out= cl.have_param("out") ? cl.get_param("out") : "WS_NMalpha_network.jrnf";
-	    bool ensure_connect=cl.have_param("ensure_connect");
-	    bool drop_minor_pts=cl.have_param("drop_minor_parts");
-	    bool self_loop=cl.have_param("self_loop");
-	    bool directed=cl.have_param("directed");
-	    bool allow_multiple=cl.have_param("allow_multiple");
+	size_t M=cl.get_param_i("M");
+	double alpha=cl.get_param_d("alpha");
+	std::string out= cl.have_param("out") ? cl.get_param("out") : "WS_NMalpha_network.jrnf";
+	bool ensure_connect=cl.have_param("ensure_connect");
+	bool self_loop=cl.have_param("self_loop");
+	bool directed=cl.have_param("directed");
+	bool allow_multiple=cl.have_param("allow_multiple");
       
         std::cout << "mode: create_WS_NMalpha  N=" << N << "   M=" << M << "    alpha=" << alpha << "   out=" << out << std::endl;
 	
-	    if(ensure_connect)
-	        std::cout << "ensure_connect is active!" << std::endl;
+	if(ensure_connect)
+	    std::cout << "ensure_connect is active!" << std::endl;
 	
-	    if(drop_minor_pts)
-	        std::cout << "drop_minor_parts is active!" << std::endl;
-	
-	    if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+	if(self_loop)
+	    std::cout << "self loop is active!" << std::endl;
 	
         if(directed)
-	        std::cout << "directed is active!" << std::endl;
+	    std::cout << "directed is active!" << std::endl;
 	
-	    if(allow_multiple)
-	        std::cout << "multiple is active!" << std::endl;
-		
+	if(allow_multiple)
+	    std::cout << "multiple is active!" << std::endl;
+
+
+        bool connected=false;
+
+	while(!connected) {
+	    std::cout << "creating network" << std::endl;
 	
-	    bool connected=false;
-	    std::vector< pair<size_t, size_t> > edges;
-	
-	    while(!connected) {
-	        std::cout << "creating network" << std::endl;
-	
-	        edges.clear();
+     	    std::vector< pair<size_t, size_t> > edges;
             create_watts_strogatz(edges, N, M, alpha,allow_multiple,self_loop, directed);
 	    
-	        cout << "Checking connectivity / calculating clusters." << endl;
+	    cout << "Checking connectivity / calculating clusters." << endl;
 	    
-	        bd_network nw(N, edges);
-	        nw.do_analyis();
+	    bd_network nw(N, edges);
+	    nw.do_analyis();
 	    
-	        if(nw.is_connected() || !ensure_connect) {
-	            connected = true;
+	    if(nw.is_connected() || !ensure_connect) {
+	        connected = true;
 		
-	            vector<species> sp;
-	            vector<reaction> re;
+	        vector<species> sp;
+	        vector<reaction> re;
 		
-		        if(!drop_minor_pts || nw.is_connected()) {
-		            cout << "Simple output!" << std::endl;  
+                cout << "Simple output!" << std::endl;  
 		    
-		            for(size_t t=0; t<N; ++t) 
-		                rm_add_species_ne(sp, t);
+	        for(size_t t=0; t<N; ++t) 
+		    rm_add_species_ne(sp, t);
 		    
-		            for(size_t t=0; t<edges.size(); ++t) 
-		                rm_1to1rev(re, edges[t].first, edges[t].second);  
-		        } else {
-		            cout << "Output with dropping! NOT IMPLEMENTED YET!" << std::endl; // TODO 
-		        }
-		
-	            write_jrnf_reaction_n(out, sp, re);
-	        }
+	        for(size_t t=0; t<edges.size(); ++t) 
+		    rm_1to1rev(re, edges[t].first, edges[t].second);  
+            
+		write_jrnf_reaction_n(out, sp, re);
 	    }
+        }
     }
     
     
     
     if(cl.have_param("create_WS_NMalpha_bi_C")) {
         size_t N=cl.get_param_i("N");
-	    size_t M=cl.get_param_i("M");
-	    double alpha=cl.get_param_d("alpha");
-	    size_t C=cl.get_param_i("C");
-	    std::string out= cl.have_param("out") ? cl.get_param("out") : "bi_NMalphaC_network.jrnf";
-	    bool ensure_connect=cl.have_param("ensure_connect");
-	    bool drop_minor_pts=cl.have_param("drop_minor_parts");
-	    bool self_loop=cl.have_param("self_loop");
-	    bool directed=cl.have_param("directed");
-	    bool allow_multiple=cl.have_param("allow_multiple");
+	size_t M=cl.get_param_i("M");
+	double alpha=cl.get_param_d("alpha");
+	size_t C=cl.get_param_i("C");
+	std::string out= cl.have_param("out") ? cl.get_param("out") : "bi_NMalphaC_network.jrnf";
+	bool ensure_connect=cl.have_param("ensure_connect");
+	bool self_loop=cl.have_param("self_loop");
+	bool directed=cl.have_param("directed");
+	bool allow_multiple=cl.have_param("allow_multiple");
+        bool limit_coupling=cl.have_param("limit_coupling");
 	
-	    // Energy distribution of species and for activation energy
-	    // TODO Not implemented yet
-	    size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
-	                            // 1 <-> logarithmic ln([0.01,1])
-	    size_t aener_dist=0;    // 0 <-> linear [0, 1]
-	                            // 1 <-> logarithmic -ln([0.01,1])
+	// Energy distribution of species and for activation energy
+	// TODO Not implemented yet
+	size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
+	                        // 1 <-> logarithmic ln([0.01,1])
+	size_t aener_dist=0;    // 0 <-> linear [0, 1]
+	                        // 1 <-> logarithmic -ln([0.01,1])
 	
-	       
-	    std::cout << "mode: create_WS_NMalpha_bi_C  N=" << N << "   M=";
-	    std::cout << M << "    alpha=" << alpha << "   C=" << C;
-	    std::cout << "    out=" << out << std::endl;
+	std::cout << "mode: create_WS_NMalpha_bi_C  N=" << N << "   M=";
+	std::cout << M << "    alpha=" << alpha << "   C=" << C;
+	std::cout << "    out=" << out << std::endl;
 	
 	    
-	    if(ensure_connect)
-	        std::cout << "ensure_connect is active!" << std::endl;
+	if(ensure_connect)
+	    std::cout << "ensure_connect is active!" << std::endl;
+		
+	if(self_loop)
+	    std::cout << "self loop is active!" << std::endl;
 	
-	    if(drop_minor_pts)
-	        std::cout << "drop_minor_parts is active!" << std::endl;
+	if(directed)
+	    std::cout << "directed is active!" << std::endl;
 	
-	    if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
-	
-	    if(directed)
-	        std::cout << "directed is active!" << std::endl;
-	
-	    if(allow_multiple)
-	        std::cout << "allow multiple is active!" << std::endl;
+	if(allow_multiple)
+	    std::cout << "allow multiple is active!" << std::endl;
+
+        if(limit_coupling)
+            std::cout << "limit coupling is active!" << std::endl;
 
         cout << "Energy distribution is " << energy_dist;
         cout << " and activation energy dist is " << aener_dist << endl;
 	
-  	    bool done=false;
-	    while(!done) {
-            std::vector< pair<size_t, size_t> > edges;
-	        create_watts_strogatz(edges, N, M, alpha,allow_multiple,self_loop, directed);
+
+        bool connected=false;
+	
+	while(!connected) {
+	    std::cout << "creating network" << std::endl;
+	
+     	    std::vector< pair<size_t, size_t> > edges, couples;
+            create_watts_strogatz(edges, N, M, alpha,allow_multiple,self_loop, directed);
+            couple_watts_strogatz(couples, C, edges, limit_coupling, allow_multiple, self_loop, directed);
 	    
-	        cout << "Checking connectivity / calculating clusters." << endl;
+	    cout << "Checking connectivity / calculating clusters." << endl;
 	    
-	        bd_network nw(N, edges);
-	        nw.do_analyis();
-	        
-	        if(!nw.is_connected() && ensure_connect) {
-	            cout << "Redoing: Because of ensure_connect." << endl;
-	        } else {
-			    std::vector< pair<size_t, size_t> > couples;
-			    couple_watts_strogatz(couples, C, edges);	
-				
-	            vector<species> sp;
-	            vector<reaction> re;
-		        done=true;
+	    bd_network nw(N, edges);
+	    nw.do_analyis();
+	    
+	    if(nw.is_connected() || !ensure_connect) {
+	        connected = true;
 		
-	            for(size_t t=0; t<N; ++t) 
-		            rm_add_species(sp, t, energy_dist);    
+	        vector<species> sp;
+	        vector<reaction> re;
 		
-		        // Combine network link to "a+b->c+d"-reactions
-		        for(size_t i=0; i<couples.size(); ++i) {
-		            size_t r1=couples[i].first;
-		            size_t r2=couples[i].second;
+                cout << "Output!" << std::endl;  
+
+	        for(size_t t=0; t<N; ++t) 
+		    rm_add_species(sp, t, energy_dist);    
+		
+		// Combine network link to "a+b->c+d"-reactions
+		for(size_t i=0; i<couples.size(); ++i) {
+		    size_t r1=couples[i].first;
+		    size_t r2=couples[i].second;
 		    
-		            size_t a(edges[r1].first), b(edges[r2].first), 
-			               c(edges[r1].second), d(edges[r2].second);
+		    size_t a(edges[r1].first), b(edges[r2].first), 
+			   c(edges[r1].second), d(edges[r2].second);
 			   
-	                // create reaction using the macro function
-		            rm_2to2rev(re, a, b, c, d, aener_dist);
+	            // create reaction using the macro function
+		    rm_2to2rev(re, a, b, c, d, aener_dist);
 		    
-		            // removing links connected from the edge list
-		            edges.erase(edges.begin()+r2);
-		            edges.erase(edges.begin()+r1);		  
-		        }
+		    // removing links connected from the edge list
+		    edges.erase(edges.begin()+r2);
+		    edges.erase(edges.begin()+r1);		  
+		}
 		
     
                 // "Translate" all those unary reactions ("A->B")
-		        for(size_t t=0; t<edges.size(); ++t) {
-		            size_t a(edges[t].first), b(edges[t].second);
+		for(size_t t=0; t<edges.size(); ++t) {
+		    size_t a(edges[t].first), b(edges[t].second);
 			   
-	                // create reaction using the macro function
-		            rm_1to1rev(re, a, b, aener_dist);
-		        }
+	            // create reaction using the macro function
+		    rm_1to1rev(re, a, b, aener_dist);
+		}
 			
-	            write_jrnf_reaction_n(out, sp, re);
-	        }
+                write_jrnf_reaction_n(out, sp, re);	         
 	    }
+        }
     }
 
   
@@ -1049,168 +1025,161 @@ int main(int argc, const char* argv[]) {
      
     if(cl.have_param("create_PS_NMhmr")) {
         size_t N=cl.get_param_i("N");
-	    size_t M=cl.get_param_i("M");
-	    size_t m=cl.get_param_i("m");
-	    size_t h=cl.get_param_i("h");
-	    double r=cl.get_param_d("r");
-	    std::string out= cl.have_param("out") ? cl.get_param("out") : "PS_NMhmr_network.jrnf";
-	    bool ensure_connect=cl.have_param("ensure_connect");
-	    bool drop_minor_pts=cl.have_param("drop_minor_parts");
-	    bool self_loop=cl.have_param("self_loop");
-	    bool directed=cl.have_param("directed");
-	    bool allow_multiple=cl.have_param("allow_multiple");
+        size_t M=cl.get_param_i("M");
+        size_t m=cl.get_param_i("m");
+        size_t h=cl.get_param_i("h");
+        double r=cl.get_param_d("r");
+        std::string out= cl.have_param("out") ? cl.get_param("out") : "PS_NMhmr_network.jrnf";
+        bool ensure_connect=cl.have_param("ensure_connect");
+        bool self_loop=cl.have_param("self_loop");
+        bool directed=cl.have_param("directed");
+        bool allow_multiple=cl.have_param("allow_multiple");
       
         std::cout << "mode: create_PS_NMhmr  N=" << N << "   M=" << M << "    h=" << h << "   m=" << m << "   r=" << r << "   out=" << out << std::endl;
-	    if(ensure_connect)
-	        std::cout << "ensure_connect is active!" << std::endl;
+	if(ensure_connect)
+	    std::cout << "ensure_connect is active!" << std::endl;
 	
-	    if(drop_minor_pts)
-	        std::cout << "drop_minor_parts is active!" << std::endl;
+	if(self_loop)
+	    std::cout << "self loop is active!" << std::endl;
 	
-	    if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+	if(directed)
+	    std::cout << "directed is active!" << std::endl;
 	
-	    if(directed)
-	        std::cout << "directed is active!" << std::endl;
+	if(allow_multiple)
+	    std::cout << "multiple is active!" << std::endl;
 	
-	    if(allow_multiple)
-	        std::cout << "multiple is active!" << std::endl;
-		
-	    bool connected=false;
-	    std::vector< pair<size_t, size_t> > edges;
+
+        bool connected=false;
+
+	while(!connected) {
+	    std::cout << "creating network" << std::endl;
 	
-	    while(!connected) {
-	        std::cout << "creating network" << std::endl;
-	
-	        edges.clear();
+     	    std::vector< pair<size_t, size_t> > edges;
             create_pan_sinha(edges, N, M, h, m, r,allow_multiple,self_loop, directed);
 	    
-	        cout << "Checking connectivity / calculating clusters." << endl;
+	    cout << "Checking connectivity / calculating clusters." << endl;
 	    
-	        bd_network nw(N, edges);
-	        nw.do_analyis();
+	    bd_network nw(N, edges);
+	    nw.do_analyis();
 	    
-	        if(nw.is_connected() || !ensure_connect) {
-	            connected = true;
+	    if(nw.is_connected() || !ensure_connect) {
+	        connected = true;
 		
-	            vector<species> sp;
-	            vector<reaction> re;
+	        vector<species> sp;
+	        vector<reaction> re;
 		
-		        if(!drop_minor_pts || nw.is_connected()) {
-		            cout << "Simple output!" << std::endl;  
+                cout << "Simple output!" << std::endl;  
 		    
-		            for(size_t t=0; t<N; ++t) 
-		                rm_add_species_ne(sp, t);
+	        for(size_t t=0; t<N; ++t) 
+		    rm_add_species_ne(sp, t);
 		    
-		            for(size_t t=0; t<edges.size(); ++t) 
-		                rm_1to1rev(re, edges[t].first, edges[t].second);  
-		        } else {
-		            cout << "Output with dropping! NOT IMPLEMENTED YET!" << std::endl; // TODO 
-		        }
-		
-	            write_jrnf_reaction_n(out, sp, re);
-	        }
+	        for(size_t t=0; t<edges.size(); ++t) 
+		    rm_1to1rev(re, edges[t].first, edges[t].second);  
+            
+		write_jrnf_reaction_n(out, sp, re);
 	    }
+        }
     }
 
 
 
     if(cl.have_param("create_PS_NMhmr_bi_C")) {
         size_t N=cl.get_param_i("N");
-	    size_t M=cl.get_param_i("M");
-	    size_t m=cl.get_param_i("m");
-	    size_t h=cl.get_param_i("h");
-	    double r=cl.get_param_d("r");
-	    size_t C=cl.get_param_i("C");
-	    std::string out= cl.have_param("out") ? cl.get_param("out") : "PS_NMhmr_bi_C_network.jrnf";
-	    bool ensure_connect=cl.have_param("ensure_connect");
-	    bool drop_minor_pts=cl.have_param("drop_minor_parts");
-	    bool self_loop=cl.have_param("self_loop");
-	    bool directed=cl.have_param("directed");
-	    bool allow_multiple=cl.have_param("allow_multiple");
+	size_t M=cl.get_param_i("M");
+	size_t m=cl.get_param_i("m");
+        size_t h=cl.get_param_i("h");
+        double r=cl.get_param_d("r");
+        size_t C=cl.get_param_i("C");
+        std::string out= cl.have_param("out") ? cl.get_param("out") : "PS_NMhmr_bi_C_network.jrnf";
+        bool ensure_connect=cl.have_param("ensure_connect");
+        bool self_loop=cl.have_param("self_loop");
+        bool directed=cl.have_param("directed");
+        bool allow_multiple=cl.have_param("allow_multiple");
+        bool limit_coupling=cl.have_param("limit_coupling");
       
         std::cout << "mode: create_PS_NMhmr_bi_C   N=" << N << "   M=" << M;
         std::cout << "    h=" << h << "   m=" << m << "   r=" << r;
         std::cout << "  C=" << C << "   out=" << out << std::endl;
 		
-	    // Energy distribution of species and for activation energy
-	    // TODO Not implemented yet
-	    size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
-	                            // 1 <-> logarithmic ln([0.01,1])
-	    size_t aener_dist=0;    // 0 <-> linear [0, 1]
-	                            // 1 <-> logarithmic -ln([0.01,1])
+	// Energy distribution of species and for activation energy
+	// TODO Not implemented yet
+	size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
+	                        // 1 <-> logarithmic ln([0.01,1])
+	size_t aener_dist=0;    // 0 <-> linear [0, 1]
+	                        // 1 <-> logarithmic -ln([0.01,1])
 	
-	    
-	    if(ensure_connect)
-	        std::cout << "ensure_connect is active!" << std::endl;
+	if(ensure_connect)
+	    std::cout << "ensure_connect is active!" << std::endl;
 	
-	    if(drop_minor_pts)
-	        std::cout << "drop_minor_parts is active!" << std::endl;
+	if(self_loop)
+	    std::cout << "self loop is active!" << std::endl;
 	
-	    if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+        if(directed)
+            std::cout << "directed is active!" << std::endl;
 	
-	    if(directed)
-	        std::cout << "directed is active!" << std::endl;
-	
-	    if(allow_multiple)
-	        std::cout << "allow multiple is active!" << std::endl;
+        if(allow_multiple)
+            std::cout << "allow multiple is active!" << std::endl;
+
+        if(limit_coupling)
+            std::cout << "limit coupling is active!" << std::endl;
 
         cout << "Energy distribution is " << energy_dist;
         cout << " and activation energy dist is " << aener_dist << endl;
+
+
+        bool connected=false;
 	
-  	    bool done=false;
-	    while(!done) {
-            std::vector< pair<size_t, size_t> > edges;
-	        create_pan_sinha(edges, N, M, h, m, r,allow_multiple,self_loop, directed);
+	while(!connected) {
+	    std::cout << "creating network" << std::endl;
+	
+     	    std::vector< pair<size_t, size_t> > edges, couples;
+            create_pan_sinha(edges, N, M, h, m, r,allow_multiple,self_loop, directed);
+            couple_pan_sinha(couples, C, edges, h, m, r, limit_coupling, allow_multiple, self_loop, directed);
 	    
-	        cout << "Checking connectivity / calculating clusters." << endl;
+	    cout << "Checking connectivity / calculating clusters." << endl;
 	    
-	        bd_network nw(N, edges);
-	        nw.do_analyis();
-	        
-	        if(!nw.is_connected() && ensure_connect) {
-	            cout << "Redoing: Because of ensure_connect." << endl;
-	        } else {
-			    std::vector< pair<size_t, size_t> > couples;
-			    couple_pan_sinha(couples, C, edges, N, M, h, m, r, 
-                                 allow_multiple, self_loop, directed);	
-				
-	            vector<species> sp;
-	            vector<reaction> re;
-		        done=true;
+	    bd_network nw(N, edges);
+	    nw.do_analyis();
+	    
+	    if(nw.is_connected() || !ensure_connect) {
+	        connected = true;
 		
-	            for(size_t t=0; t<N; ++t) 
-		            rm_add_species(sp, t, energy_dist);    
+	        vector<species> sp;
+	        vector<reaction> re;
 		
-		        // Combine network link to "a+b->c+d"-reactions
-		        for(size_t i=0; i<couples.size(); ++i) {
-		            size_t r1=couples[i].first;
-		            size_t r2=couples[i].second;
+                cout << "Output!" << std::endl;  
+
+	        for(size_t t=0; t<N; ++t) 
+		    rm_add_species(sp, t, energy_dist);    
+		
+		// Combine network link to "a+b->c+d"-reactions
+		for(size_t i=0; i<couples.size(); ++i) {
+		    size_t r1=couples[i].first;
+		    size_t r2=couples[i].second;
 		    
-		            size_t a(edges[r1].first), b(edges[r2].first), 
-			               c(edges[r1].second), d(edges[r2].second);
+		    size_t a(edges[r1].first), b(edges[r2].first), 
+			   c(edges[r1].second), d(edges[r2].second);
 			   
-	                // create reaction using the macro function
-		            rm_2to2rev(re, a, b, c, d, aener_dist);
+	            // create reaction using the macro function
+		    rm_2to2rev(re, a, b, c, d, aener_dist);
 		    
-		            // removing links connected from the edge list
-		            edges.erase(edges.begin()+r2);
-		            edges.erase(edges.begin()+r1);		  
-		        }
+		    // removing links connected from the edge list
+		    edges.erase(edges.begin()+r2);
+		    edges.erase(edges.begin()+r1);		  
+		}
 		
     
                 // "Translate" all those unary reactions ("A->B")
-		        for(size_t t=0; t<edges.size(); ++t) {
-		            size_t a(edges[t].first), b(edges[t].second);
+		for(size_t t=0; t<edges.size(); ++t) {
+		    size_t a(edges[t].first), b(edges[t].second);
 			   
-	                // create reaction using the macro function
-		            rm_1to1rev(re, a, b, aener_dist);
-		        }
+	            // create reaction using the macro function
+		    rm_1to1rev(re, a, b, aener_dist);
+		}
 			
-	            write_jrnf_reaction_n(out, sp, re);
-	        }
+                write_jrnf_reaction_n(out, sp, re);	         
 	    }
+        }
     }
     
     

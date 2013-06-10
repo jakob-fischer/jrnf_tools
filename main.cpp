@@ -196,6 +196,7 @@ void rm_add_species_ne(std::vector<species>& sp, const std::string& name) {
 
 int main(int argc, const char* argv[]) {
     srand(time(0));
+
     cl_para cl(argc, argv);  
     
     /*
@@ -513,21 +514,40 @@ int main(int argc, const char* argv[]) {
     
     if(cl.have_param("create_Kasting_1985")) {
         std::vector<species> sp;  
-	    std::vector<reaction> re;
+	std::vector<reaction> re;
 	
-	    build_model_Kasting_1985(sp, re);
+	build_model_Kasting_1985(sp, re);
 	
-	    cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
 	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
+	if(cl.have_param("out")) {
+	    std::string out=cl.get_param("out");
+	    cout << "Writing reaction network to " << out << endl;
+	    write_jrnf_reaction_n(out, sp, re);
+	}
     }
+
+    /*
+     *
+     *
+     */
+
+    if(cl.have_param("create_Duncan_Chameides")) {
+        std::vector<species> sp;
+        std::vector<reaction> re;
+
+        build_model_Duncan_Chameides_org(sp, re);
+
+	cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	
+	if(cl.have_param("out")) {
+	    std::string out=cl.get_param("out");
+	    cout << "Writing reaction network to " << out << endl;
+	    write_jrnf_reaction_n(out, sp, re);
+	}    
     
-    
-    
+    }
+
     
     /*
      * Create simple Erdos-Renyi-Network with given number of
@@ -713,25 +733,25 @@ int main(int argc, const char* argv[]) {
         bool allow_multiple=cl.have_param("allow_multiple");
         bool limit_coupling=cl.have_param("limit_coupling");
 	
-	    // Energy distribution of species and for activation energy
-	    // TODO Not implemented yet
-	    size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
-	                            // 1 <-> logarithmic ln([0.01,1])
-	    size_t aener_dist=0;    // 0 <-> linear [0, 1]
+        // Energy distribution of species and for activation energy
+        // TODO Not implemented yet
+        size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
+                                // 1 <-> logarithmic ln([0.01,1])
+        size_t aener_dist=0;    // 0 <-> linear [0, 1]
 	                            // 1 <-> logarithmic -ln([0.01,1])
 	
 	       
-	    std::cout << "mode: create_BA_NM_bi_C  N=" << N << "   M=";
-	    std::cout << M << "    C=" << C << "    out=" << out << std::endl;
+        std::cout << "mode: create_BA_NM_bi_C  N=" << N << "   M=";
+        std::cout << M << "    C=" << C << "    out=" << out << std::endl;
 	
     	if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+            std::cout << "self loop is active!" << std::endl;
 	
-	    if(directed)
-	        std::cout << "directed is active!" << std::endl;
+        if(directed)
+            std::cout << "directed is active!" << std::endl;
 	
-	    if(allow_multiple)
-	        std::cout << "allow multiple is active!" << std::endl;
+        if(allow_multiple)
+            std::cout << "allow multiple is active!" << std::endl;
 
         if(limit_coupling)
             std::cout << "limit coupling is active!" << std::endl;
@@ -740,13 +760,15 @@ int main(int argc, const char* argv[]) {
         cout << " and activation energy dist is " << aener_dist << endl;
 	
 
-	    std::cout << "creating network" << std::endl;
+        std::cout << "creating network" << std::endl;
 
-   	    std::vector< pair<size_t, size_t> > edges, couples;
+        std::vector< pair<size_t, size_t> > edges, couples;
         create_barabasi_albert(edges, N, M,allow_multiple,self_loop, directed);
+
+	cout << "Doing coupling." << endl;
         couple_barabasi_albert(couples, C, edges, limit_coupling, allow_multiple, self_loop, directed);
 	    
-	    cout << "Checking connectivity / calculating clusters." << endl;
+
 	    
         vector<species> sp;
         vector<reaction> re;

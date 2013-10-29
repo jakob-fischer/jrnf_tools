@@ -601,12 +601,12 @@ int main(int argc, const char* argv[]) {
    
     if(cl.have_param("create_ER_NM_bi_C")) {
         size_t N=cl.get_param_i("N");
-	    size_t M=cl.get_param_i("M");
-	    size_t C=cl.get_param_i("C");
-	    std::string out= cl.have_param("out") ? cl.get_param("out") : "bi_nMC_network.jrnf";
-	    bool self_loop=cl.have_param("self_loop");
-	    bool directed=cl.have_param("directed");
-	    bool allow_multiple=cl.have_param("allow_multiple");
+	size_t M=cl.get_param_i("M");
+	size_t C=cl.get_param_i("C");
+	std::string out= cl.have_param("out") ? cl.get_param("out") : "bi_nMC_network.jrnf";
+	bool self_loop=cl.have_param("self_loop");
+	bool directed=cl.have_param("directed");
+	bool allow_multiple=cl.have_param("allow_multiple");
         bool limit_coupling=cl.have_param("limit_coupling");
 
 	
@@ -900,7 +900,7 @@ int main(int argc, const char* argv[]) {
 	
    	    std::vector< pair<size_t, size_t> > edges, couples;
         create_watts_strogatz(edges, N, M, alpha,allow_multiple,self_loop, directed);
-        couple_watts_strogatz(couples, C, edges, limit_coupling, allow_multiple, self_loop, directed);
+        couple_watts_strogatz(couples, C, edges, alpha, limit_coupling, allow_multiple, self_loop, directed);
 	    
 	    
         vector<species> sp;

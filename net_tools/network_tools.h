@@ -736,7 +736,7 @@ void couple_erdos_renyi(std::vector< std::pair<size_t, size_t> > &couples,
  */
 
 // Macro helper to determine "distance" 
-size_t cws_links_cy_dist(size_t a, size_t b, size_t N) {
+size_t cws_links_cy_dist(int a, int b, size_t N) {
     size_t a_amb = std::abs(a-b);
     size_t a_amb2 = std::abs(N-a_amb);
 
@@ -746,7 +746,7 @@ size_t cws_links_cy_dist(size_t a, size_t b, size_t N) {
  
 void couple_watts_strogatz(std::vector< std::pair<size_t, size_t> > &couples,
                            size_t C, std::vector< std::pair<size_t, size_t> > &edges,
-                           bool maintain_p=false, bool allow_multiple=false, 
+                           double beta, bool maintain_p=false, bool allow_multiple=false, 
                            bool self_loop=false, bool directed = false) {
     // Calculate N and M 
     size_t M=edges.size();
@@ -768,6 +768,7 @@ void couple_watts_strogatz(std::vector< std::pair<size_t, size_t> > &couples,
 
 
     size_t close_v = ceil(double(M)/N); // needed to count which additional "connections" are far
+    std::cout << "close_v=" << close_v << std::endl;
 
     std::vector<bool> edges_m; // edges matrix (necessary if you want to maintain (not) allow multiple) 
     std::vector<std::set<size_t> > edges_on_node;    // list for every node (to which edges is it connected?)
@@ -787,14 +788,23 @@ void couple_watts_strogatz(std::vector< std::pair<size_t, size_t> > &couples,
     }
 
     // count number of far links (regarding cyclic structure further appart edges than close_v)
+    //std::cout << "N=" << N << std::endl;
     size_t far_links = 0;
-    for(size_t i=0; i<edges.size(); ++i) 
+    for(size_t i=0; i<edges.size(); ++i) {
         if(cws_links_cy_dist(edges[i].first, edges[i].second, N) > close_v)
             ++far_links;
+
+    }
+
+    //double p=double(far_links)/M;
+    //std::cout << "p=" << p << "   beta=" << beta << std::endl;
     
-    size_t prob_far_far=100000.0*double(far_links)/N*double(far_links)/N;
-    size_t prob_clo_clo=100000.0*(1-double(far_links)/N)*(1-double(far_links)/N);
-    size_t prob_far_clo=100000.0*double(far_links)/N*(1-double(far_links)/N);
+    size_t prob_far_far=1; //1000000.0*beta*beta;
+    size_t prob_clo_clo=1000000.0;
+    size_t prob_far_clo=10; //1000000.0*beta*(1-beta);
+
+    std::cout << "far_links=" << far_links << "  N=" << N << "   M=" << M << std::endl;
+    std::cout << "prob_ff=" << prob_far_far << "   prob_cc=" << prob_clo_clo << "   prob_fc=" << prob_far_clo << std::endl;
 
     // The binary tree probability distribution object is created and initialized
     bt_draw nw_prob;

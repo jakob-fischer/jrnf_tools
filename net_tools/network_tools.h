@@ -369,6 +369,8 @@ void create_pan_sinha(std::vector< std::pair<size_t, size_t> >& edges,
         for(size_t i=0; i<N_tmp; ++i) 
             ++elem_c[i];
     }
+
+    std::cout << "Elementary size is " << elem_c[0] << std::endl;
     
     // Creating lookup table for asociating every node on every level with one module
     // starting with the N entries for level 0, than N entries for level 1, then 2...

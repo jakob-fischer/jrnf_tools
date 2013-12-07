@@ -24,23 +24,6 @@ using namespace std;
 
 
 /*
- * Transforms a reaction network given by reaction list/vector to a 
- * bidirectional network 'bd_nw'
- */
-
-void rn_to_bdn(std::vector<reaction>& re, bd_network& bd_nw) {
-    for(size_t i=0; i<re.size(); ++i) {
-        for(size_t m=0; m<re[i].get_no_educt_s(); ++m) {
-	        for(size_t n=0; n<re[i].get_no_product_s(); ++n) {
-	            bd_nw.add_edge(re[i].get_educt_id(m), 
-			    re[i].get_product_id(n));  
-	        }
-	    }
-    }
-}
-
-
-/*
  *  Makro for diffusion connection of two species. (A -> B) reactions 
  * in both directions with all constants set to 1.0.
  */

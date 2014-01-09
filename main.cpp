@@ -182,6 +182,80 @@ int main(int argc, const char* argv[]) {
 
     cl_para cl(argc, argv);  
     
+
+    /*
+     * Creates the reaction network of 1box_cli_hyd-model
+     */
+    
+    if(cl.have_param("create_1box_cli_hyd")) {
+        std::cout << "mode: create_1box_cli_hyd" << std::endl;
+      
+        std::vector<species> sp;  
+	std::vector<reaction> re;
+	
+	build_model_1box_cli_hyd(sp, re);
+	
+        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	
+	
+	    if(cl.have_param("out")) {
+	        std::string out=cl.get_param("out");
+	        cout << "Writing reaction network to " << out << endl;
+	        write_jrnf_reaction_n(out, sp, re);
+	    }
+    }
+
+
+    /*
+     * Creates the reaction network of 2box_cli_hyd-model
+     */
+    
+    if(cl.have_param("create_2box_cli_hyd")) {
+        std::cout << "mode: create_2box_cli_hyd" << std::endl;
+      
+        std::vector<species> sp;  
+	std::vector<reaction> re;
+	
+	build_model_2box_cli_hyd(sp, re);
+	
+        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	
+	
+	    if(cl.have_param("out")) {
+	        std::string out=cl.get_param("out");
+	        cout << "Writing reaction network to " << out << endl;
+	        write_jrnf_reaction_n(out, sp, re);
+	    }
+    }
+
+
+    /*
+     * Creates the reaction network of 2box_cli_rad-model
+     */
+    
+    if(cl.have_param("create_2box_cli_rad")) {
+        std::cout << "mode: create_1box_cli_rad" << std::endl;
+      
+        std::vector<species> sp;  
+	std::vector<reaction> re;
+	
+	build_model_2box_cli_rad(sp, re);
+	
+        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	
+	
+	    if(cl.have_param("out")) {
+	        std::string out=cl.get_param("out");
+	        cout << "Writing reaction network to " << out << endl;
+	        write_jrnf_reaction_n(out, sp, re);
+	    }
+    }
+
+
+
+
+
+
     /*
      * Function generates a small test network in jrnf-format
      * and writes it to 'test.jrnf'

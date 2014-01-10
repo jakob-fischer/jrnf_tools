@@ -146,6 +146,10 @@ void build_model_1box_cli_hyd(std::vector<species> &sp, std::vector<reaction> &r
     re.back().add_product(iT_surf, 1);
 
     re.push_back(reaction()); 
+    re.back().add_educt(iT_surf, 1);
+    re.back().add_product(iT_atm, 1);
+
+    re.push_back(reaction()); 
     re.back().add_educt(iT_atm, 1);
     re.back().add_product(iT_space, 1);
 
@@ -160,8 +164,8 @@ void build_model_1box_cli_hyd(std::vector<species> &sp, std::vector<reaction> &r
     re.back().add_product(iH2O_atm, 1);
 
     re.push_back(reaction()); 
-    re.back().add_educt(iT_atm, 1);
-    re.back().add_product(iT_space, 1);
+    re.back().add_educt(iH2O_atm, 1);
+    re.back().add_product(iH2O_surf, 1);
 }
 
 

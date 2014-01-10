@@ -4,6 +4,73 @@
 #include "reaction_network.h"
 
 
+void build_model_carbon3way(std::vector<species> &sp, std::vector<reaction> &re) {
+    sp.push_back(species(sp.size(), "T_sun"));
+    size_t iT_sun=0;
+    sp.push_back(species(sp.size(), "T_s_down"));
+    size_t iT_s_down=1;
+    sp.push_back(species(sp.size(), "T_space"));
+    size_t iT_space=2;
+    sp.push_back(species(sp.size(), "T_surf"));
+    size_t iT_surf=3;
+    sp.push_back(species(sp.size(), "CO2"));
+    size_t iCO2=4;
+    sp.push_back(species(sp.size(), "C_plant"));
+    size_t iC_plant=5;
+    sp.push_back(species(sp.size(), "C_soil"));
+    size_t iC_soil=6;
+    sp.push_back(species(sp.size(), "C_fossil"));
+    size_t iC_fossil=7;
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_sun, 1);
+    re.back().add_product(iT_s_down, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_s_down, 1);
+    re.back().add_product(iT_space, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_s_down, 1);
+    re.back().add_product(iT_surf, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_surf, 1);
+    re.back().add_product(iT_space, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_s_down, 1);
+    re.back().add_educt(iCO2, 1);
+    re.back().add_product(iC_plant, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iC_plant, 1);
+    re.back().add_product(iCO2, 1);
+    re.back().add_product(iT_surf, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iC_plant, 1);
+    re.back().add_product(iC_soil, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iC_soil, 1);
+    re.back().add_product(iCO2, 1);
+    re.back().add_product(iT_surf, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iC_soil, 1);
+    re.back().add_product(iC_fossil, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iC_fossil, 1);
+    re.back().add_product(iCO2, 1);
+    re.back().add_product(iT_surf, 1);
+}
+
+
+
+
+
 void build_model_2box_cli_rad(std::vector<species> &sp, std::vector<reaction> &re) {
     sp.push_back(species(sp.size(), "T_sun"));
     size_t iT_sun=0;

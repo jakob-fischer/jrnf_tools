@@ -184,6 +184,31 @@ int main(int argc, const char* argv[]) {
     
 
     /*
+     * Creates the reaction network of carbon3way-model
+     */
+    
+    if(cl.have_param("create_carbon3way")) {
+        std::cout << "mode: create_carbon3way" << std::endl;
+      
+        std::vector<species> sp;  
+	std::vector<reaction> re;
+	
+	build_model_carbon3way(sp, re);
+	
+        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	
+	
+	    if(cl.have_param("out")) {
+	        std::string out=cl.get_param("out");
+	        cout << "Writing reaction network to " << out << endl;
+	        write_jrnf_reaction_n(out, sp, re);
+	    }
+    }
+
+
+
+
+    /*
      * Creates the reaction network of 1box_cli_hyd-model
      */
     

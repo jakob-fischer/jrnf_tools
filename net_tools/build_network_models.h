@@ -4,6 +4,140 @@
 #include "reaction_network.h"
 
 
+void build_model_2box_cli_H2O_C(std::vector<species> &sp, std::vector<reaction> &re) {
+    sp.push_back(species(sp.size(), "T_sun"));
+    size_t iT_sun=0;
+    sp.push_back(species(sp.size(), "T_space"));
+    size_t iT_space=1;
+    sp.push_back(species(sp.size(), "T_sun_d"));
+    size_t iT_sun_d=2;
+    sp.push_back(species(sp.size(), "T_sun_d_1"));
+    size_t iT_sun_d_1=3;
+    sp.push_back(species(sp.size(), "T_sun_d_2"));
+    size_t iT_sun_d_2=4;
+    sp.push_back(species(sp.size(), "T_surf_1"));
+    size_t iT_surf_1=5;
+    sp.push_back(species(sp.size(), "T_surf_2"));
+    size_t iT_surf_2=6;
+    sp.push_back(species(sp.size(), "T_atm_1"));
+    size_t iT_atm_1=7;
+    sp.push_back(species(sp.size(), "T_atm_2"));
+    size_t iT_atm_2=8;
+    sp.push_back(species(sp.size(), "H2O_atm_1"));
+    size_t iH2O_atm_1=9;
+    sp.push_back(species(sp.size(), "H2O_atm_2"));
+    size_t iH2O_atm_2=10;
+    sp.push_back(species(sp.size(), "H2O_surf_1"));
+    size_t iH2O_surf_1=11;
+    sp.push_back(species(sp.size(), "H2O_surf_2"));
+    size_t iH2O_surf_2=12;
+    sp.push_back(species(sp.size(), "CO2"));
+    size_t iCO2=13;
+    sp.push_back(species(sp.size(), "C_plant"));
+    size_t iC_plant=14;
+    sp.push_back(species(sp.size(), "C_soil"));
+    size_t iC_soil=15;
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_sun, 1);
+    re.back().add_product(iT_sun_d, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_sun_d, 1);
+    re.back().add_product(iT_sun_d_1, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_sun_d, 1);
+    re.back().add_product(iT_sun_d_2, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_sun_d_1, 1);
+    re.back().add_product(iT_space, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_sun_d_2, 1);
+    re.back().add_product(iT_space, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_sun_d_1, 1);
+    re.back().add_product(iT_surf_1, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_sun_d_2, 1);
+    re.back().add_product(iT_surf_2, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_surf_1, 1);
+    re.back().add_product(iT_atm_1, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_surf_2, 1);
+    re.back().add_product(iT_atm_2, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_atm_1, 1);
+    re.back().add_product(iT_space, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_atm_2, 1);
+    re.back().add_product(iT_space, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iH2O_surf_1, 1);
+    re.back().add_educt(iT_surf_1, 1);
+    re.back().add_product(iH2O_atm_1, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iH2O_surf_2, 1);
+    re.back().add_educt(iT_surf_2, 1);
+    re.back().add_product(iH2O_atm_2, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iH2O_atm_1, 1);
+    re.back().add_product(iH2O_surf_1, 1);
+    re.back().add_product(iT_atm_1, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iH2O_atm_2, 1);
+    re.back().add_product(iH2O_surf_2, 1);
+    re.back().add_product(iT_atm_2, 1);
+
+
+    re.push_back(reaction());
+    re.back().add_educt(iCO2, 1);
+    re.back().add_educt(iT_sun_d_1, 1);
+    re.back().add_product(iC_plant, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iC_plant, 1);
+    re.back().add_product(iC_soil, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iC_plant, 1);
+    re.back().add_product(iCO2, 1);
+    re.back().add_product(iT_surf_1, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iC_soil, 1);
+    re.back().add_product(iCO2, 1);
+    re.back().add_product(iT_surf_1, 1);
+
+
+    re.push_back(reaction());
+    re.back().add_educt(iH2O_surf_1, 1);
+    re.back().add_product(iH2O_surf_2, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iH2O_atm_2, 1);
+    re.back().add_product(iH2O_atm_1, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iT_atm_1, 1);
+    re.back().add_product(iT_atm_2, 1);
+}
+
+
+
 void build_model_carbon3way(std::vector<species> &sp, std::vector<reaction> &re) {
     sp.push_back(species(sp.size(), "T_sun"));
     size_t iT_sun=0;

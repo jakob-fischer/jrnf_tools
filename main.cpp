@@ -181,6 +181,29 @@ int main(int argc, const char* argv[]) {
     srand(time(0));
 
     cl_para cl(argc, argv);  
+
+
+    /*
+     * Creates the reaction network of carbon3way-model
+     */
+    
+    if(cl.have_param("create_2box_cli_H2O_C")) {
+        std::cout << "mode: create_2box_cli_H2O_C" << std::endl;
+      
+        std::vector<species> sp;  
+	std::vector<reaction> re;
+	
+	build_model_2box_cli_H2O_C(sp, re);
+	
+        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	
+	
+	    if(cl.have_param("out")) {
+	        std::string out=cl.get_param("out");
+	        cout << "Writing reaction network to " << out << endl;
+	        write_jrnf_reaction_n(out, sp, re);
+	    }
+    }
     
 
     /*

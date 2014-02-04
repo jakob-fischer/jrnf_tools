@@ -488,6 +488,32 @@ int main(int argc, const char* argv[]) {
     }
     
     
+
+
+    /*
+     * Creates the reaction network of the model of Nair
+     * and writes it in jrnf-format to the file given with 'out'.
+     */
+    
+    if(cl.have_param("create_Nair_1994")) {
+        std::cout << "mode: create_Yung_DeMore" << std::endl;
+      
+        std::vector<species> sp;  
+	    std::vector<reaction> re;
+	
+	    build_model_Nair_1994(sp, re);
+	
+	    cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	
+	    if(cl.have_param("out")) {
+	        std::string out=cl.get_param("out");
+	        cout << "Writing jrnf-reaction network to " << out << endl;
+	        write_jrnf_reaction_n(out, sp, re);
+	    }
+    }
+
+
+
     /*
      * Creates the reaction network of the data gathered
      * in the book of Yung and DeMore and writes it in
@@ -610,7 +636,31 @@ int main(int argc, const char* argv[]) {
 	    }
 	}
     
+
+
     
+    /*
+     * Creates the reaction network of the model of 
+     * Kasting (220 reactions) for Earth's atmosphere and writes
+     * it in jrnf-format to the file given with 'out'.
+     */  
+    
+    if(cl.have_param("create_Kasting_220")) {
+        std::vector<species> sp;  
+	std::vector<reaction> re;
+	
+	build_model_Kasting_220(sp, re);
+	
+	cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	
+	if(cl.have_param("out")) {
+	    std::string out=cl.get_param("out");
+	    cout << "Writing reaction network to " << out << endl;
+	    write_jrnf_reaction_n(out, sp, re);
+	}
+    }
+    
+
     /*
      * Creates the reaction network of the model of 
      * Kasting (1985) for Earths atmosphere and writes

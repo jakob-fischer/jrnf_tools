@@ -638,6 +638,28 @@ int main(int argc, const char* argv[]) {
     
 
 
+    /*
+     * Creates the reaction network of the model of 
+     * Kasting (339 reactions) for Earth's atmosphere and writes
+     * it in jrnf-format to the file given with 'out'.
+     */  
+    
+    if(cl.have_param("create_Kasting_359")) {
+        std::vector<species> sp;  
+	std::vector<reaction> re;
+	
+	build_model_Kasting_359(sp, re);
+	
+	cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	
+	if(cl.have_param("out")) {
+	    std::string out=cl.get_param("out");
+	    cout << "Writing reaction network to " << out << endl;
+	    write_jrnf_reaction_n(out, sp, re);
+	}
+    }
+
+
     
     /*
      * Creates the reaction network of the model of 

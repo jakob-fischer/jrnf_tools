@@ -8041,6 +8041,8 @@ void build_model_Krasnopolsky_2012(std::vector<species> &sp, std::vector<reactio
 
 
 void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re) {
+    // One species is missing in reaction scheme: SO4AER
+
     sp.push_back(species(sp.size(), "hv"));
     size_t ihv=0; 
     sp.push_back(species(sp.size(), "O"));
@@ -8067,134 +8069,129 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
     size_t iHO2=11; 
     sp.push_back(species(sp.size(), "N2"));
     size_t iN2=12; 
-    sp.push_back(species(sp.size(), "O3P"));
-    size_t iO3P=13; 
     sp.push_back(species(sp.size(), "CO2"));
-    size_t iCO2=14; 
+    size_t iCO2=13; 
     sp.push_back(species(sp.size(), "CO"));
-    size_t iCO=15; 
+    size_t iCO=14; 
     sp.push_back(species(sp.size(), "H2CO"));
-    size_t iH2CO=16; 
+    size_t iH2CO=15; 
     sp.push_back(species(sp.size(), "CH4"));
-    size_t iCH4=17; 
+    size_t iCH4=16; 
     sp.push_back(species(sp.size(), "1CH2"));
-    size_t i1CH2=18; 
+    size_t i1CH2=17; 
     sp.push_back(species(sp.size(), "HCO"));
-    size_t iHCO=19; 
+    size_t iHCO=18; 
     sp.push_back(species(sp.size(), "CH3"));
-    size_t iCH3=20; 
+    size_t iCH3=19; 
     sp.push_back(species(sp.size(), "N"));
-    size_t iN=21; 
+    size_t iN=20; 
     sp.push_back(species(sp.size(), "NO"));
-    size_t iNO=22; 
+    size_t iNO=21; 
     sp.push_back(species(sp.size(), "NO2"));
-    size_t iNO2=23; 
+    size_t iNO2=22; 
     sp.push_back(species(sp.size(), "HNO3"));
-    size_t iHNO3=24; 
+    size_t iHNO3=23; 
     sp.push_back(species(sp.size(), "HNO2"));
-    size_t iHNO2=25; 
+    size_t iHNO2=24; 
     sp.push_back(species(sp.size(), "3CH2"));
-    size_t i3CH2=26; 
+    size_t i3CH2=25; 
     sp.push_back(species(sp.size(), "S"));
-    size_t iS=27; 
+    size_t iS=26; 
     sp.push_back(species(sp.size(), "S2"));
-    size_t iS2=28; 
+    size_t iS2=27; 
     sp.push_back(species(sp.size(), "SO"));
-    size_t iSO=29;
+    size_t iSO=28;
     sp.push_back(species(sp.size(), "CH3O2"));
-    size_t iCH3O2=30; 
+    size_t iCH3O2=29; 
     sp.push_back(species(sp.size(), "H2S"));
-    size_t iH2S=31; 
+    size_t iH2S=30; 
     sp.push_back(species(sp.size(), "SO2"));
-    size_t iSO2=32; 
+    size_t iSO2=31; 
     sp.push_back(species(sp.size(), "SO3"));
-    size_t iSO3=33; 
+    size_t iSO3=32; 
     sp.push_back(species(sp.size(), "HS"));
-    size_t iHS=34;  
+    size_t iHS=33;  
     sp.push_back(species(sp.size(), "HSO3"));
-    size_t iHSO3=35; 
+    size_t iHSO3=34; 
     sp.push_back(species(sp.size(), "H2SO4"));
-    size_t iH2SO4=36; 
+    size_t iH2SO4=35; 
     sp.push_back(species(sp.size(), "HSO"));
-    size_t iHSO=37; 
-    sp.push_back(species(sp.size(), "SO2_1"));
-    size_t iSO2_1=38; 
-    sp.push_back(species(sp.size(), "SO2_3"));
-    size_t iSO2_3=39; 
+    size_t iHSO=36; 
+    sp.push_back(species(sp.size(), "1SO2"));
+    size_t i1SO2=37; 
+    sp.push_back(species(sp.size(), "3SO2"));
+    size_t i3SO2=38; 
     sp.push_back(species(sp.size(), "C"));
-    size_t iC=40; 
-    sp.push_back(species(sp.size(), "S2s"));
-    size_t iS2s=41; 
+    size_t iC=39; 
     sp.push_back(species(sp.size(), "S3"));
-    size_t iS3=42; 
+    size_t iS3=40; 
     sp.push_back(species(sp.size(), "S4"));
-    size_t iS4=43;
+    size_t iS4=41;
     sp.push_back(species(sp.size(), "S8_AER"));
-    size_t iS8_AER=44;
+    size_t iS8_AER=42;
     sp.push_back(species(sp.size(), "CH3O"));
-    size_t iCH3O=45;
+    size_t iCH3O=43;
     sp.push_back(species(sp.size(), "C2H4OH"));
-    size_t iC2H4OH=46;
+    size_t iC2H4OH=44;
     sp.push_back(species(sp.size(), "C2H2OH"));
-    size_t iC2H2OH=47;
+    size_t iC2H2OH=45;
     sp.push_back(species(sp.size(), "HCAER"));
-    size_t iHCAER=48;  
+    size_t iHCAER=46;  
     sp.push_back(species(sp.size(), "C2H5"));
-    size_t iC2H5=49; 
+    size_t iC2H5=47; 
     sp.push_back(species(sp.size(), "C2H6"));
-    size_t iC2H6=50;
+    size_t iC2H6=48;
     sp.push_back(species(sp.size(), "C2H4"));
-    size_t iC2H4=51;
+    size_t iC2H4=49;
     sp.push_back(species(sp.size(), "C2H3"));
-    size_t iC2H3=52;
+    size_t iC2H3=50;
     sp.push_back(species(sp.size(), "C3H2"));
-    size_t iC3H2=53;
+    size_t iC3H2=51;
     sp.push_back(species(sp.size(), "C3H3"));
-    size_t iC3H3=54; 
+    size_t iC3H3=52; 
     sp.push_back(species(sp.size(), "C3H6"));
-    size_t iC3H6=55; 
+    size_t iC3H6=53; 
     sp.push_back(species(sp.size(), "C3H7"));
-    size_t iC3H7=56; 
+    size_t iC3H7=54; 
     sp.push_back(species(sp.size(), "CH3CO"));
-    size_t iCH3CO=57;
+    size_t iCH3CO=55;
+    sp.push_back(species(sp.size(), "C3H5"));
+    size_t iC3H5=56;
     sp.push_back(species(sp.size(), "CH2CCH2"));
-    size_t iC3H5=58;
-    sp.push_back(species(sp.size(), "CH2CCH2"));
-    size_t iCH2CCH2=59;
+    size_t iCH2CCH2=57;
     sp.push_back(species(sp.size(), "CH3CHO"));
-    size_t iCH3CHO=60;  
+    size_t iCH3CHO=58;  
     sp.push_back(species(sp.size(), "N2H3"));
-    size_t iN2H3=61;
+    size_t iN2H3=59;
     sp.push_back(species(sp.size(), "C3H8"));
-    size_t iC3H8=62; 
+    size_t iC3H8=60; 
     sp.push_back(species(sp.size(), "HNO"));
-    size_t iHNO=63;
+    size_t iHNO=61;
     sp.push_back(species(sp.size(), "CH"));
-    size_t iCH=64;
+    size_t iCH=62;
     sp.push_back(species(sp.size(), "NH3"));
-    size_t iNH3=65;
+    size_t iNH3=63;
     sp.push_back(species(sp.size(), "NH"));
-    size_t iNH=66;
+    size_t iNH=64;
     sp.push_back(species(sp.size(), "NH2"));
-    size_t iNH2=67;
+    size_t iNH2=65;
     sp.push_back(species(sp.size(), "N2H4"));
-    size_t iN2H4=68;
+    size_t iN2H4=66;
     sp.push_back(species(sp.size(), "NH2s"));
-    size_t iNH2s=69;
+    size_t iNH2s=67;
     sp.push_back(species(sp.size(), "CH2CO"));
-    size_t iCH2CO=70;
+    size_t iCH2CO=68;
     sp.push_back(species(sp.size(), "CH3C2H"));
-    size_t iCH3C2H=71;
+    size_t iCH3C2H=69;
     sp.push_back(species(sp.size(), "C2H5CHO"));
-    size_t iC2H5CHO=72;
+    size_t iC2H5CHO=70;
     sp.push_back(species(sp.size(), "C2"));
-    size_t iC2=73; 
+    size_t iC2=71; 
     sp.push_back(species(sp.size(), "C2H"));
-    size_t iC2H=74; 
+    size_t iC2H=72; 
     sp.push_back(species(sp.size(), "C2H2"));
-    size_t iC2H2=75; 
+    size_t iC2H2=73; 
  
-
 
     // R1
     re.push_back(reaction()); 
@@ -8337,28 +8334,28 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
     re.push_back(reaction()); 
     re.back().add_educt(iO1D, 1);
     re.back().add_educt(iM, 1);
-    re.back().add_product(iO3P, 1);
+    re.back().add_product(iO, 1);
     re.back().add_product(iM, 1);  
 
     // R22
     re.push_back(reaction()); 
     re.back().add_educt(iO1D, 1);
     re.back().add_educt(iO2, 1);
-    re.back().add_product(iO3P, 1);
+    re.back().add_product(iO, 1);
     re.back().add_product(iO2, 1);  
 
     // R23
     re.push_back(reaction()); 
     re.back().add_educt(iO2, 1);
     re.back().add_educt(ihv, 1);
-    re.back().add_product(iO3P, 1);
+    re.back().add_product(iO, 1);
     re.back().add_product(iO1D, 1);  
 
     // R24
     re.push_back(reaction()); 
     re.back().add_educt(iO2, 1);
     re.back().add_educt(ihv, 1);
-    re.back().add_product(iO3P, 2); 
+    re.back().add_product(iO, 2); 
 
     // R25
     re.push_back(reaction()); 
@@ -8379,7 +8376,7 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
     re.back().add_educt(iO3, 1);
     re.back().add_educt(ihv, 1);
     re.back().add_product(iO2, 1);
-    re.back().add_product(iO3P, 1);  
+    re.back().add_product(iO, 1);  
 
     // R28
     re.push_back(reaction()); 
@@ -8392,7 +8389,7 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
     re.back().add_educt(iCO2, 1);
     re.back().add_educt(ihv, 1);
     re.back().add_product(iCO, 1);
-    re.back().add_product(iO3P, 1);  
+    re.back().add_product(iO, 1);  
 
     // R30
     re.push_back(reaction()); 
@@ -9205,13 +9202,13 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
     re.push_back(reaction()); 
     re.back().add_educt(iSO2, 1);
     re.back().add_educt(ihv, 1);
-    re.back().add_product(iSO2_1, 1);  
+    re.back().add_product(i1SO2, 1);  
 
     // R145
     re.push_back(reaction()); 
     re.back().add_educt(iSO2, 1);
     re.back().add_educt(ihv, 1);
-    re.back().add_product(iSO2_3, 1);  
+    re.back().add_product(i3SO2, 1);  
 
     // R146
     re.push_back(reaction()); 
@@ -9223,7 +9220,7 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
     re.push_back(reaction()); 
     re.back().add_educt(iS2, 1);
     re.back().add_educt(ihv, 1);
-    re.back().add_product(iS2s, 1);  
+    re.back().add_product(iS2, 1);  
 
     // R148
     re.push_back(reaction()); 
@@ -9241,60 +9238,60 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
 
     // R150
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_educt(iM, 1);
-    re.back().add_product(iSO2_3, 1);
+    re.back().add_product(i3SO2, 1);
     re.back().add_product(iM, 1);  
 
     // R151
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_educt(iM, 1);
     re.back().add_product(iSO2, 1);
     re.back().add_product(iM, 1);  
 
     // R152
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
-    re.back().add_product(iSO2_3, 1);
+    re.back().add_educt(i1SO2, 1);
+    re.back().add_product(i3SO2, 1);
     re.back().add_product(ihv, 1);  
    
     // R153
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_product(iSO2, 1);
     re.back().add_product(ihv, 1);  
 
     // R154
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_educt(iO2, 1);
     re.back().add_product(iSO3, 1);
     re.back().add_product(iO, 1);  
 
     // R155
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_educt(iSO2, 1);
     re.back().add_product(iSO3, 1);
     re.back().add_product(iSO, 1);  
 
     // R156
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_3, 1);
+    re.back().add_educt(i3SO2, 1);
     re.back().add_educt(iM, 1);
     re.back().add_product(iSO2, 1);
     re.back().add_product(iM, 1);  
 
     // R157
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_3, 1);
+    re.back().add_educt(i3SO2, 1);
     re.back().add_product(iSO2, 1);
     re.back().add_product(ihv, 1);  
 
     // R158
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_3, 1);
+    re.back().add_educt(i3SO2, 1);
     re.back().add_educt(iSO2, 1);
     re.back().add_product(iSO3, 1);
     re.back().add_product(iSO, 1);  
@@ -10731,6 +10728,8 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
 }
 
 void build_model_Kasting_220(std::vector<species> &sp, std::vector<reaction> &re) {
+    // One species is "missing" in reaction scheme: SO4AER
+
     sp.push_back(species(sp.size(), "hv"));
     size_t ihv=0; 
     sp.push_back(species(sp.size(), "O"));
@@ -10757,94 +10756,92 @@ void build_model_Kasting_220(std::vector<species> &sp, std::vector<reaction> &re
     size_t iHO2=11; 
     sp.push_back(species(sp.size(), "N2"));
     size_t iN2=12; 
-    sp.push_back(species(sp.size(), "O3P"));
-    size_t iO3P=13; 
     sp.push_back(species(sp.size(), "CO2"));
-    size_t iCO2=14; 
+    size_t iCO2=13; 
     sp.push_back(species(sp.size(), "CO"));
-    size_t iCO=15; 
+    size_t iCO=14; 
     sp.push_back(species(sp.size(), "H2CO"));
-    size_t iH2CO=16; 
+    size_t iH2CO=15; 
     sp.push_back(species(sp.size(), "CH4"));
-    size_t iCH4=17; 
+    size_t iCH4=16; 
     sp.push_back(species(sp.size(), "1CH2"));
-    size_t i1CH2=18; 
+    size_t i1CH2=17; 
     sp.push_back(species(sp.size(), "H3CO"));
-    size_t iH3CO=19; 
+    size_t iH3CO=18; 
     sp.push_back(species(sp.size(), "HCO"));
-    size_t iHCO=20; 
+    size_t iHCO=19; 
     sp.push_back(species(sp.size(), "N2O"));
-    size_t iN2O=21; 
+    size_t iN2O=20; 
     sp.push_back(species(sp.size(), "CH3"));
-    size_t iCH3=22; 
+    size_t iCH3=21; 
     sp.push_back(species(sp.size(), "N"));
-    size_t iN=23; 
+    size_t iN=22; 
     sp.push_back(species(sp.size(), "NO"));
-    size_t iNO=24; 
+    size_t iNO=23; 
     sp.push_back(species(sp.size(), "NO2"));
-    size_t iNO2=25; 
+    size_t iNO2=24; 
     sp.push_back(species(sp.size(), "CH3OOH"));
-    size_t iCH3OOH=26; 
+    size_t iCH3OOH=25; 
     sp.push_back(species(sp.size(), "HNO3"));
-    size_t iHNO3=27; 
+    size_t iHNO3=26; 
     sp.push_back(species(sp.size(), "HNO2"));
-    size_t iHNO2=28; 
+    size_t iHNO2=27; 
     sp.push_back(species(sp.size(), "HO2NO2"));
-    size_t iHO2NO2=29; 
+    size_t iHO2NO2=28; 
     sp.push_back(species(sp.size(), "HOCl"));
-    size_t iHOCl=30; 
+    size_t iHOCl=29; 
     sp.push_back(species(sp.size(), "Cl2"));
-    size_t iCl2=31; 
+    size_t iCl2=30; 
     sp.push_back(species(sp.size(), "ClO2"));
-    size_t iClO2=32; 
+    size_t iClO2=31; 
     sp.push_back(species(sp.size(), "Cl2O2"));
-    size_t iCl2O2=33; 
+    size_t iCl2O2=32; 
     sp.push_back(species(sp.size(), "ClO"));
-    size_t iClO=34; 
+    size_t iClO=33; 
     sp.push_back(species(sp.size(), "HCl"));
-    size_t iHCl=35; 
+    size_t iHCl=34; 
     sp.push_back(species(sp.size(), "NO3"));
-    size_t iNO3=36; 
+    size_t iNO3=35; 
     sp.push_back(species(sp.size(), "3CH2"));
-    size_t i3CH2=37; 
+    size_t i3CH2=36; 
     sp.push_back(species(sp.size(), "S"));
-    size_t iS=38; 
+    size_t iS=37; 
     sp.push_back(species(sp.size(), "S2"));
-    size_t iS2=39; 
+    size_t iS2=38; 
     sp.push_back(species(sp.size(), "SO"));
-    size_t iSO=40;
+    size_t iSO=39;
     sp.push_back(species(sp.size(), "CH3O2"));
-    size_t iCH3O2=41; 
+    size_t iCH3O2=40; 
     sp.push_back(species(sp.size(), "Cl"));
-    size_t iCl=42; 
+    size_t iCl=41; 
     sp.push_back(species(sp.size(), "CH3Cl"));
-    size_t iCH3Cl=43; 
+    size_t iCH3Cl=42; 
     sp.push_back(species(sp.size(), "NOCl"));
-    size_t iNOCl=44; 
+    size_t iNOCl=43; 
     sp.push_back(species(sp.size(), "H2S"));
-    size_t iH2S=45; 
+    size_t iH2S=44; 
     sp.push_back(species(sp.size(), "SO2"));
-    size_t iSO2=46; 
+    size_t iSO2=45; 
     sp.push_back(species(sp.size(), "SO3"));
-    size_t iSO3=47; 
+    size_t iSO3=46; 
     sp.push_back(species(sp.size(), "N2O5"));
-    size_t iN2O5=48; 
+    size_t iN2O5=47; 
     sp.push_back(species(sp.size(), "HS"));
-    size_t iHS=49;  
+    size_t iHS=48;  
     sp.push_back(species(sp.size(), "HSO3"));
-    size_t iHSO3=50; 
+    size_t iHSO3=49; 
     sp.push_back(species(sp.size(), "H2SO4"));
-    size_t iH2SO4=51; 
+    size_t iH2SO4=50; 
     sp.push_back(species(sp.size(), "ClONO2"));
-    size_t iClONO2=52; 
+    size_t iClONO2=51; 
     sp.push_back(species(sp.size(), "ClONO"));
-    size_t iClONO=53; 
+    size_t iClONO=52; 
     sp.push_back(species(sp.size(), "HSO"));
-    size_t iHSO=54; 
-    sp.push_back(species(sp.size(), "SO2_1"));
-    size_t iSO2_1=55; 
-    sp.push_back(species(sp.size(), "SO2_3"));
-    size_t iSO2_3=56; 
+    size_t iHSO=53; 
+    sp.push_back(species(sp.size(), "1SO2"));
+    size_t i1SO2=54; 
+    sp.push_back(species(sp.size(), "3SO2"));
+    size_t i3SO2=55; 
 
 
     // R1   C
@@ -10988,28 +10985,28 @@ void build_model_Kasting_220(std::vector<species> &sp, std::vector<reaction> &re
     re.push_back(reaction()); 
     re.back().add_educt(iO1D, 1);
     re.back().add_educt(iN2, 1);
-    re.back().add_product(iO3P, 1);
+    re.back().add_product(iO, 1);
     re.back().add_product(iN2, 1);
 
     // R22   C
     re.push_back(reaction()); 
     re.back().add_educt(iO1D, 1);
     re.back().add_educt(iO2, 1);
-    re.back().add_product(iO3P, 1);
+    re.back().add_product(iO, 1);
     re.back().add_product(iO2, 1);
 
     // R23   C
     re.push_back(reaction()); 
     re.back().add_educt(iO2, 1);
     re.back().add_educt(ihv, 1);
-    re.back().add_product(iO3P, 1);
+    re.back().add_product(iO, 1);
     re.back().add_product(iO1D, 1);
 
     // R24   C
     re.push_back(reaction()); 
     re.back().add_educt(iO2, 1);
     re.back().add_educt(ihv, 1);
-    re.back().add_product(iO3P, 2);
+    re.back().add_product(iO, 2);
 
     // R25   C
     re.push_back(reaction()); 
@@ -11030,7 +11027,7 @@ void build_model_Kasting_220(std::vector<species> &sp, std::vector<reaction> &re
     re.back().add_educt(iO3, 1);
     re.back().add_educt(ihv, 1);
     re.back().add_product(iO2, 1);
-    re.back().add_product(iO3P, 1);
+    re.back().add_product(iO, 1);
 
     // R28   C
     re.push_back(reaction()); 
@@ -11043,7 +11040,7 @@ void build_model_Kasting_220(std::vector<species> &sp, std::vector<reaction> &re
     re.back().add_educt(iCO2, 1);
     re.back().add_educt(ihv, 1);
     re.back().add_product(iCO, 1);
-    re.back().add_product(iO3P, 1);
+    re.back().add_product(iO, 1);
 
     // R30   C
     re.push_back(reaction()); 
@@ -12157,13 +12154,13 @@ void build_model_Kasting_220(std::vector<species> &sp, std::vector<reaction> &re
     re.push_back(reaction()); 
     re.back().add_educt(iSO2, 1);
     re.back().add_educt(ihv, 1);
-    re.back().add_product(iSO2_1, 1);
+    re.back().add_product(i1SO2, 1);
 
     // R187   C
     re.push_back(reaction()); 
     re.back().add_educt(iSO2, 1);
     re.back().add_educt(ihv, 1);
-    re.back().add_product(iSO2_3, 1);
+    re.back().add_product(i3SO2, 1);
 
     // R188   C
     re.push_back(reaction()); 
@@ -12181,63 +12178,63 @@ void build_model_Kasting_220(std::vector<species> &sp, std::vector<reaction> &re
 
     // R190   C
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_educt(iM, 1);
-    re.back().add_product(iSO2_3, 1);
+    re.back().add_product(i3SO2, 1);
     re.back().add_product(iM, 1);
 
     // R191   C
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_educt(iM, 1);
     re.back().add_product(iSO2, 1);
     re.back().add_product(iM, 1);
 
     // R192   C
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_educt(ihv, 1);
-    re.back().add_product(iSO2_3, 1);
+    re.back().add_product(i3SO2, 1);
     re.back().add_product(ihv, 1);
 
     // R193   C
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_educt(ihv, 1);
     re.back().add_product(iSO2, 1);
     re.back().add_product(ihv, 1);
 
     // R194   C
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_educt(iO2, 1);
     re.back().add_product(iSO3, 1);
     re.back().add_product(iO, 1);
 
     // R195   C
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_1, 1);
+    re.back().add_educt(i1SO2, 1);
     re.back().add_educt(iSO2, 1);
     re.back().add_product(iSO3, 1);
     re.back().add_product(iSO, 1);
 
     // R196   C
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_3, 1);
+    re.back().add_educt(i3SO2, 1);
     re.back().add_educt(iM, 1);
     re.back().add_product(iSO2, 1);
     re.back().add_product(iM, 1);
 
     // R197   C
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_3, 1);
+    re.back().add_educt(i3SO2, 1);
     re.back().add_educt(ihv, 1);
     re.back().add_product(iSO2, 1);
     re.back().add_product(ihv, 1);
 
     // R198   C
     re.push_back(reaction()); 
-    re.back().add_educt(iSO2_3, 1);
+    re.back().add_educt(i3SO2, 1);
     re.back().add_educt(iSO2, 1);
     re.back().add_product(iSO3, 1);
     re.back().add_product(iSO, 1);

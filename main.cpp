@@ -25,7 +25,9 @@ using namespace std;
 
 /*
  *  Makro for diffusion connection of two species. (A -> B) reactions 
- * in both directions with all constants set to 1.0.
+ * in both directions with all constants set to 1.0. 
+ *  (The species 'a' and 'b' are connected by adding the respective
+ *   reactions to the reaction vector re.)
  */
 
 void rm_diffusion(vector<reaction>& re, size_t a, size_t b) {
@@ -119,7 +121,7 @@ void rm_2to2rev(vector<reaction>& re, size_t a, size_t b, size_t c, size_t d, si
         rea.set_activation(double(rand())/RAND_MAX);
     } else {
         // WARNING Not implemented yet
-	    rea.set_activation(double(rand())/RAND_MAX);
+	rea.set_activation(double(rand())/RAND_MAX);
     }
     
     re.push_back(rea);  
@@ -229,8 +231,6 @@ int main(int argc, const char* argv[]) {
     }
 
 
-
-
     /*
      * Creates the reaction network of 1box_cli_hyd-model
      */
@@ -300,10 +300,6 @@ int main(int argc, const char* argv[]) {
     }
 
 
-
-
-
-
     /*
      * Function generates a small test network in jrnf-format
      * and writes it to 'test.jrnf'
@@ -336,6 +332,10 @@ int main(int argc, const char* argv[]) {
 	
 	    write_jrnf_reaction_n("test.jrnf", sp, re);
     }
+
+
+
+
     
     
     /*
@@ -485,9 +485,31 @@ int main(int argc, const char* argv[]) {
 	    filter_r_network_s(sp, re, sp_out, re_out, sp_name);
 	
     	write_jrnf_reaction_n(out, sp_out, re_out);
+    }   
+  
+
+    /*
+     * Creates a simple network to test algorithms and hypotheses.
+     */
+    
+    if(cl.have_param("create_test_alpha_1")) {
+        std::cout << "mode: create_test_alpha_1" << std::endl;
+      
+        std::vector<species> sp;  
+        std::vector<reaction> re;
+	
+         build_model_test_alpha_1(sp, re);
+	
+        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
+	
+        if(cl.have_param("out")) {
+            std::string out=cl.get_param("out");
+            cout << "Writing jrnf-reaction network to " << out << endl;
+            write_jrnf_reaction_n(out, sp, re);
+        }
     }
-    
-    
+
+
 
 
     /*
@@ -513,11 +535,10 @@ int main(int argc, const char* argv[]) {
     }
 
 
-
     /*
      * Creates the reaction network of the data gathered
      * in the book of Yung and DeMore and writes it in
-     * jrnf-format to the file given with 'rnet'.
+     * jrnf-format to the file given with 'out'.
      */
     
     if(cl.have_param("create_Yung_DeMore")) {
@@ -541,7 +562,7 @@ int main(int argc, const char* argv[]) {
     /*
      * Creates the reaction network of the models of 
      * Krasnopolsky (2007, 2012) for Venus and writes
-     * it in jrnf-format to the file given with 'rnet'.
+     * it in jrnf-format to the file given with 'out'.
      */
     
     if(cl.have_param("create_Krasnopolsky_2007_2012")) {
@@ -570,7 +591,7 @@ int main(int argc, const char* argv[]) {
     /*
      * Creates the reaction network of the model of 
      * Krasnopolsky (2012) for Venus and writes
-     * it in jrnf-format to the file given with 'rnet'.
+     * it in jrnf-format to the file given with 'out'.
      */
 	
     if(cl.have_param("create_Krasnopolsky_2012")) {
@@ -594,7 +615,7 @@ int main(int argc, const char* argv[]) {
     /*
      * Creates the reaction network of the model of 
      * Krasnopolsky (2007) for Venus and writes
-     * it in jrnf-format to the file given with 'rnet'.
+     * it in jrnf-format to the file given with 'out'.
      */
     
     if(cl.have_param("create_Krasnopolsky_2007")) {
@@ -618,7 +639,7 @@ int main(int argc, const char* argv[]) {
     /*
      * Creates the reaction network of the model used
      * by Hadac (2011) and writes it in jrnf-format 
-     * to the file given with 'rnet'.
+     * to the file given with 'out'.
      */   
     
     if(cl.have_param("create_Hadac_2011")) {
@@ -640,7 +661,7 @@ int main(int argc, const char* argv[]) {
 
     /*
      * Creates the reaction network of the model of 
-     * Kasting (339 reactions) for Earth's atmosphere and writes
+     * Kasting (359 reactions) for Earth's atmosphere and writes
      * it in jrnf-format to the file given with 'out'.
      */  
     
@@ -660,7 +681,6 @@ int main(int argc, const char* argv[]) {
     }
 
 
-    
     /*
      * Creates the reaction network of the model of 
      * Kasting (220 reactions) for Earth's atmosphere and writes
@@ -686,7 +706,7 @@ int main(int argc, const char* argv[]) {
     /*
      * Creates the reaction network of the model of 
      * Kasting (1985) for Earths atmosphere and writes
-     * it in jrnf-format to the file given with 'rnet'.
+     * it in jrnf-format to the file given with 'out'.
      */  
     
     if(cl.have_param("create_Kasting_1985")) {
@@ -705,9 +725,10 @@ int main(int argc, const char* argv[]) {
     }
 
     /*
-     *
-     *
-     */
+     * Creates the reaction network of the model of 
+     * Duncan&Chameides and writes it in jrnf-format
+     * to the file given with 'out'.
+     */  
 
     if(cl.have_param("create_Duncan_Chameides")) {
         std::vector<species> sp;
@@ -743,8 +764,6 @@ int main(int argc, const char* argv[]) {
       
         std::cout << "mode: create_ER_NM  N=" << N << "   M=" << M << "   out=" << out << std::endl;
 	    
-	    std::cout << "ensure_connect is active!" << std::endl;
-	
         if(self_loop)
             std::cout << "self loop is active!" << std::endl;
 	
@@ -754,27 +773,29 @@ int main(int argc, const char* argv[]) {
         if(allow_multiple)
             std::cout << "allow multiple is active!" << std::endl;
 		
-	    std::cout << "creating network" << std::endl;
+	std::cout << "creating network" << std::endl;
 	
      	std::vector< pair<size_t, size_t> > edges;
         create_erdos_renyi(edges, N, M,allow_multiple,self_loop, directed);
 	    
-	    vector<species> sp;
-	    vector<reaction> re;
+	vector<species> sp;
+	vector<reaction> re;
 		
         cout << "Simple output!" << std::endl;  
 		    
-	    for(size_t t=0; t<N; ++t) 
-		    rm_add_species_ne(sp, t);
+	for(size_t t=0; t<N; ++t) 
+	    rm_add_species_ne(sp, t);
 		    
-	    for(size_t t=0; t<edges.size(); ++t) 
-		    rm_1to1rev(re, edges[t].first, edges[t].second);  
+	for(size_t t=0; t<edges.size(); ++t) 
+	    rm_1to1rev(re, edges[t].first, edges[t].second);  
             
-		write_jrnf_reaction_n(out, sp, re);
+	write_jrnf_reaction_n(out, sp, re);
     }
     
    
-   
+    /*
+     * Create reaction network from Erdos-Renyi model coupling linear reactions to nonlinear
+     */   
    
     if(cl.have_param("create_ER_NM_bi_C")) {
         size_t N=cl.get_param_i("N");
@@ -787,12 +808,12 @@ int main(int argc, const char* argv[]) {
         bool limit_coupling=cl.have_param("limit_coupling");
 
 	
-	    // Energy distribution of species and for activation energy
-	    // TODO Not implemented yet
-	    size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
-	                            // 1 <-> logarithmic ln([0.01,1])
-	    size_t aener_dist=0;    // 0 <-> linear [0, 1]
-	                            // 1 <-> logarithmic -ln([0.01,1])
+	// Energy distribution of species and for activation energy
+	// TODO Not implemented yet
+	size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
+	                        // 1 <-> logarithmic ln([0.01,1])
+	size_t aener_dist=0;    // 0 <-> linear [0, 1]
+	                        // 1 <-> logarithmic -ln([0.01,1])
 	
         std::cout << "mode: create_ER_NM_bi_C  N=" << N << "   M=";
         std::cout << M << "    C=" << C << "    out=" << out << std::endl;
@@ -812,47 +833,47 @@ int main(int argc, const char* argv[]) {
         cout << "Energy distribution is " << energy_dist;
         cout << " and activation energy dist is " << aener_dist << endl;
 	
-	    std::cout << "creating network" << std::endl;
+	std::cout << "creating network" << std::endl;
 	
      	std::vector< pair<size_t, size_t> > edges, couples;
-	    create_erdos_renyi(edges, N, M, allow_multiple,self_loop, directed);
+	create_erdos_renyi(edges, N, M, allow_multiple,self_loop, directed);
         couple_erdos_renyi(couples, C, edges, limit_coupling, allow_multiple, self_loop, directed);
 	    
-	    vector<species> sp;
-	    vector<reaction> re;
+	vector<species> sp;
+	vector<reaction> re;
 		
         cout << "Output!" << std::endl;  
 
-	    for(size_t t=0; t<N; ++t) 
-		    rm_add_species(sp, t, energy_dist);    
+	for(size_t t=0; t<N; ++t) 
+            rm_add_species(sp, t, energy_dist);    
 		
-		// Combine network link to "a+b->c+d"-reactions
-		for(size_t i=0; i<couples.size(); ++i) {
-		    size_t r1=couples[i].first;
-		    size_t r2=couples[i].second;
+        // Combine network link to "a+b->c+d"-reactions
+        for(size_t i=0; i<couples.size(); ++i) {
+            size_t r1=couples[i].first;
+            size_t r2=couples[i].second;
 		    
-		    size_t a(edges[r1].first), b(edges[r2].first), 
-			   c(edges[r1].second), d(edges[r2].second);
-			   
-	            // create reaction using the macro function
-		    rm_2to2rev(re, a, b, c, d, aener_dist);
+            size_t a(edges[r1].first), b(edges[r2].first), 
+            c(edges[r1].second), d(edges[r2].second);
+	   
+            // create reaction using the macro function
+            rm_2to2rev(re, a, b, c, d, aener_dist);
 		    
-		    // removing links connected from the edge list
-		    edges.erase(edges.begin()+r2);
-		    edges.erase(edges.begin()+r1);		  
-		}
+            // removing links connected from the edge list
+            edges.erase(edges.begin()+r2);
+            edges.erase(edges.begin()+r1);		  
+	}
 		
     
         // "Translate" all those unary reactions ("A->B")
-		for(size_t t=0; t<edges.size(); ++t) {
-		    size_t a(edges[t].first), b(edges[t].second);
+        for(size_t t=0; t<edges.size(); ++t) {
+            size_t a(edges[t].first), b(edges[t].second);
 			   
-	            // create reaction using the macro function
-		    rm_1to1rev(re, a, b, aener_dist);
-		}
-			
+            // create reaction using the macro function
+            rm_1to1rev(re, a, b, aener_dist);
+        }
+
         write_jrnf_reaction_n(out, sp, re);	         
-	}
+    }
 
    
     
@@ -874,7 +895,7 @@ int main(int argc, const char* argv[]) {
             std::cout << "self loop is active!" << std::endl;
 	
         if(directed)
-	        std::cout << "directed is active!" << std::endl;
+            std::cout << "directed is active!" << std::endl;
 	
         if(allow_multiple)
             std::cout << "allow multiple is active!" << std::endl;
@@ -884,21 +905,24 @@ int main(int argc, const char* argv[]) {
      	std::vector< pair<size_t, size_t> > edges;
         create_barabasi_albert(edges, N, M,allow_multiple,self_loop, directed);
 	    
-	    vector<species> sp;
-	    vector<reaction> re;
+        vector<species> sp;
+        vector<reaction> re;
 		
         cout << "Simple output!" << std::endl;  
 		    
-	    for(size_t t=0; t<N; ++t) 
-		    rm_add_species_ne(sp, t);
+        for(size_t t=0; t<N; ++t) 
+            rm_add_species_ne(sp, t);
 		    
-	    for(size_t t=0; t<edges.size(); ++t) 
-		    rm_1to1rev(re, edges[t].first, edges[t].second);  
+        for(size_t t=0; t<edges.size(); ++t) 
+            rm_1to1rev(re, edges[t].first, edges[t].second);  
             
-		write_jrnf_reaction_n(out, sp, re);
+        write_jrnf_reaction_n(out, sp, re);
     }
     
     
+    /*
+     * Create Barabasi-Albert network and couple linear reactions to nonlinear 
+     */
     
     if(cl.have_param("create_BA_NM_bi_C")) {
         size_t N=cl.get_param_i("N");
@@ -915,7 +939,7 @@ int main(int argc, const char* argv[]) {
         size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
                                 // 1 <-> logarithmic ln([0.01,1])
         size_t aener_dist=0;    // 0 <-> linear [0, 1]
-	                            // 1 <-> logarithmic -ln([0.01,1])
+                                // 1 <-> logarithmic -ln([0.01,1])
 	
 	       
         std::cout << "mode: create_BA_NM_bi_C  N=" << N << "   M=";
@@ -945,47 +969,41 @@ int main(int argc, const char* argv[]) {
 	cout << "Doing coupling." << endl;
         couple_barabasi_albert(couples, C, edges, limit_coupling, allow_multiple, self_loop, directed);
 	    
-
-	    
         vector<species> sp;
         vector<reaction> re;
 		
         cout << "Output!" << std::endl;  
 
        for(size_t t=0; t<N; ++t) 
-		    rm_add_species(sp, t, energy_dist);    
+           rm_add_species(sp, t, energy_dist);    
 		
-		// Combine network link to "a+b->c+d"-reactions
-		for(size_t i=0; i<couples.size(); ++i) {
-		    size_t r1=couples[i].first;
-		    size_t r2=couples[i].second;
+        // Combine network link to "a+b->c+d"-reactions
+        for(size_t i=0; i<couples.size(); ++i) {
+            size_t r1=couples[i].first;
+            size_t r2=couples[i].second;
 		    
-		    size_t a(edges[r1].first), b(edges[r2].first), 
-			   c(edges[r1].second), d(edges[r2].second);
+            size_t a(edges[r1].first), b(edges[r2].first), 
+                   c(edges[r1].second), d(edges[r2].second);
 			   
-	            // create reaction using the macro function
-		    rm_2to2rev(re, a, b, c, d, aener_dist);
+            // create reaction using the macro function
+            rm_2to2rev(re, a, b, c, d, aener_dist);
 		    
-		    // removing links connected from the edge list
-		    edges.erase(edges.begin()+r2);
-		    edges.erase(edges.begin()+r1);		  
-		}
+            // removing links connected from the edge list
+            edges.erase(edges.begin()+r2);
+            edges.erase(edges.begin()+r1);		  
+        }
 		
-    
-                // "Translate" all those unary reactions ("A->B")
-		for(size_t t=0; t<edges.size(); ++t) {
-		    size_t a(edges[t].first), b(edges[t].second);
+        // "Translate" all those unary reactions ("A->B")
+        for(size_t t=0; t<edges.size(); ++t) {
+            size_t a(edges[t].first), b(edges[t].second);
 			   
-	            // create reaction using the macro function
-		    rm_1to1rev(re, a, b, aener_dist);
-		}
+            // create reaction using the macro function
+            rm_1to1rev(re, a, b, aener_dist);
+        }
 			
         write_jrnf_reaction_n(out, sp, re);	         
     }
 
-    
-    
-    
     
     /*
      * 
@@ -1002,22 +1020,20 @@ int main(int argc, const char* argv[]) {
       
         std::cout << "mode: create_WS_NMalpha  N=" << N << "   M=" << M << "    alpha=" << alpha << "   out=" << out << std::endl;
 	
-	    if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+        if(self_loop)
+            std::cout << "self loop is active!" << std::endl;
 	
         if(directed)
-	        std::cout << "directed is active!" << std::endl;
+            std::cout << "directed is active!" << std::endl;
 	
         if(allow_multiple)
-	        std::cout << "multiple is active!" << std::endl;
+            std::cout << "multiple is active!" << std::endl;
 
-
-	    std::cout << "creating network" << std::endl;
+        std::cout << "creating network" << std::endl;
 	
-   	    std::vector< pair<size_t, size_t> > edges;
+        std::vector< pair<size_t, size_t> > edges;
         create_watts_strogatz(edges, N, M, alpha,allow_multiple,self_loop, directed);
 	    
-	
         vector<species> sp;
         vector<reaction> re;
 		
@@ -1026,17 +1042,20 @@ int main(int argc, const char* argv[]) {
         for(size_t t=0; t<N; ++t) 
     	    rm_add_species_ne(sp, t);
 		    
-	    for(size_t t=0; t<edges.size(); ++t) 
-		    rm_1to1rev(re, edges[t].first, edges[t].second);  
+        for(size_t t=0; t<edges.size(); ++t) 
+            rm_1to1rev(re, edges[t].first, edges[t].second);  
             
-		write_jrnf_reaction_n(out, sp, re);
+        write_jrnf_reaction_n(out, sp, re);
     }
     
     
+    /*
+     * 
+     */
     
     if(cl.have_param("create_WS_NMalpha_bi_C")) {
         size_t N=cl.get_param_i("N");
-	    size_t M=cl.get_param_i("M");
+        size_t M=cl.get_param_i("M");
         double alpha=cl.get_param_d("alpha");
     	size_t C=cl.get_param_i("C");
         std::string out= cl.have_param("out") ? cl.get_param("out") : "bi_NMalphaC_network.jrnf";
@@ -1045,12 +1064,12 @@ int main(int argc, const char* argv[]) {
         bool allow_multiple=cl.have_param("allow_multiple");
         bool limit_coupling=cl.have_param("limit_coupling");
 	
-	    // Energy distribution of species and for activation energy
-	    // TODO Not implemented yet
-	    size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
-	                            // 1 <-> logarithmic ln([0.01,1])
-	    size_t aener_dist=0;    // 0 <-> linear [0, 1]
-	                            // 1 <-> logarithmic -ln([0.01,1])
+        // Energy distribution of species and for activation energy
+        // TODO Not implemented yet
+        size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
+                                // 1 <-> logarithmic ln([0.01,1])
+        size_t aener_dist=0;    // 0 <-> linear [0, 1]
+                                // 1 <-> logarithmic -ln([0.01,1])
 	
         std::cout << "mode: create_WS_NMalpha_bi_C  N=" << N << "   M=";
         std::cout << M << "    alpha=" << alpha << "   C=" << C;
@@ -1058,13 +1077,13 @@ int main(int argc, const char* argv[]) {
 	
 	    
     	if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+            std::cout << "self loop is active!" << std::endl;
 	
-	    if(directed)
-	        std::cout << "directed is active!" << std::endl;
+        if(directed)
+            std::cout << "directed is active!" << std::endl;
 	
-	    if(allow_multiple)
-	        std::cout << "allow multiple is active!" << std::endl;
+        if(allow_multiple)
+            std::cout << "allow multiple is active!" << std::endl;
 
         if(limit_coupling)
             std::cout << "limit coupling is active!" << std::endl;
@@ -1072,10 +1091,9 @@ int main(int argc, const char* argv[]) {
         cout << "Energy distribution is " << energy_dist;
         cout << " and activation energy dist is " << aener_dist << endl;
 	
-
-	    std::cout << "creating network" << std::endl;
+        std::cout << "creating network" << std::endl;
 	
-   	    std::vector< pair<size_t, size_t> > edges, couples;
+        std::vector< pair<size_t, size_t> > edges, couples;
         create_watts_strogatz(edges, N, M, alpha,allow_multiple,self_loop, directed);
         couple_watts_strogatz(couples, C, edges, alpha, limit_coupling, allow_multiple, self_loop, directed);
 	    
@@ -1086,42 +1104,40 @@ int main(int argc, const char* argv[]) {
         cout << "Output!" << std::endl;  
 
         for(size_t t=0; t<N; ++t) 
-		    rm_add_species(sp, t, energy_dist);    
-		
-		// Combine network link to "a+b->c+d"-reactions
-		for(size_t i=0; i<couples.size(); ++i) {
-		    size_t r1=couples[i].first;
-		    size_t r2=couples[i].second;
+            rm_add_species(sp, t, energy_dist);    
+	
+        // Combine network link to "a+b->c+d"-reactions
+        for(size_t i=0; i<couples.size(); ++i) {
+            size_t r1=couples[i].first;
+            size_t r2=couples[i].second;
 		    
-		    size_t a(edges[r1].first), b(edges[r2].first), 
-			   c(edges[r1].second), d(edges[r2].second);
+            size_t a(edges[r1].first), b(edges[r2].first), 
+                   c(edges[r1].second), d(edges[r2].second);
 			   
-	            // create reaction using the macro function
-		    rm_2to2rev(re, a, b, c, d, aener_dist);
+            // create reaction using the macro function
+            rm_2to2rev(re, a, b, c, d, aener_dist);
 		    
-		    // removing links connected from the edge list
-		    edges.erase(edges.begin()+r2);
-		    edges.erase(edges.begin()+r1);		  
-		}
+            // removing links connected from the edge list
+            edges.erase(edges.begin()+r2);
+            edges.erase(edges.begin()+r1);		  
+        }
 		
     
         // "Translate" all those unary reactions ("A->B")
-		for(size_t t=0; t<edges.size(); ++t) {
-		    size_t a(edges[t].first), b(edges[t].second);
+        for(size_t t=0; t<edges.size(); ++t) {
+            size_t a(edges[t].first), b(edges[t].second);
 			   
-	            // create reaction using the macro function
-		    rm_1to1rev(re, a, b, aener_dist);
-		}
+            // create reaction using the macro function
+            rm_1to1rev(re, a, b, aener_dist);
+        }
 			
         write_jrnf_reaction_n(out, sp, re);	         
    }
 
-  
-  
     
    /*
-     * 
-     */
+    * Creates a hierarchical modular reaction network 
+    */
      
     if(cl.have_param("create_PS_NMhmr")) {
         size_t N=cl.get_param_i("N");
@@ -1136,14 +1152,14 @@ int main(int argc, const char* argv[]) {
       
         std::cout << "mode: create_PS_NMhmr  N=" << N << "   M=" << M << "    h=" << h << "   m=" << m << "   r=" << r << "   out=" << out << std::endl;
 	
-	    if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+        if(self_loop)
+            std::cout << "self loop is active!" << std::endl;
 	
-	    if(directed)
-	        std::cout << "directed is active!" << std::endl;
+        if(directed)
+            std::cout << "directed is active!" << std::endl;
 	
     	if(allow_multiple)
-	        std::cout << "multiple is active!" << std::endl;
+            std::cout << "multiple is active!" << std::endl;
 	
 
         std::cout << "creating network" << std::endl;
@@ -1151,26 +1167,30 @@ int main(int argc, const char* argv[]) {
      	std::vector< pair<size_t, size_t> > edges;
         create_pan_sinha(edges, N, M, h, m, r,allow_multiple,self_loop, directed);
 	    
-	    vector<species> sp;
-	    vector<reaction> re;
+        vector<species> sp;
+        vector<reaction> re;
 		
         cout << "Simple output!" << std::endl;  
 		    
-	    for(size_t t=0; t<N; ++t) 
-		    rm_add_species_ne(sp, t);
+        for(size_t t=0; t<N; ++t) 
+            rm_add_species_ne(sp, t);
 		    
-	    for(size_t t=0; t<edges.size(); ++t) 
-		    rm_1to1rev(re, edges[t].first, edges[t].second);  
+        for(size_t t=0; t<edges.size(); ++t) 
+            rm_1to1rev(re, edges[t].first, edges[t].second);  
             
-		write_jrnf_reaction_n(out, sp, re);
+        write_jrnf_reaction_n(out, sp, re);
     }
 
 
-
+    /*
+     * Creates a hierarchical modular network (Pan-Sinha model) and couples the linear 
+     * reactions (A -> B) to a reaction network with nonlinear reactions.
+     */
+ 
     if(cl.have_param("create_PS_NMhmr_bi_C")) {
         size_t N=cl.get_param_i("N");
     	size_t M=cl.get_param_i("M");
-	    size_t m=cl.get_param_i("m");
+        size_t m=cl.get_param_i("m");
         size_t h=cl.get_param_i("h");
         double r=cl.get_param_d("r");
         size_t C=cl.get_param_i("C");
@@ -1183,16 +1203,16 @@ int main(int argc, const char* argv[]) {
         std::cout << "mode: create_PS_NMhmr_bi_C   N=" << N << "   M=" << M;
         std::cout << "    h=" << h << "   m=" << m << "   r=" << r;
         std::cout << "  C=" << C << "   out=" << out << std::endl;
-		
-	    // Energy distribution of species and for activation energy
-	    // TODO Not implemented yet
-	    size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
-	                            // 1 <-> logarithmic ln([0.01,1])
-	    size_t aener_dist=0;    // 0 <-> linear [0, 1]
-	                            // 1 <-> logarithmic -ln([0.01,1])
+	
+        // Energy distribution of species and for activation energy
+        // TODO Not implemented yet
+        size_t energy_dist=0;   // 0 <-> linear [-1, 0]    
+                                // 1 <-> logarithmic ln([0.01,1])
+        size_t aener_dist=0;    // 0 <-> linear [0, 1]
+                                // 1 <-> logarithmic -ln([0.01,1])
 	
         if(self_loop)
-	        std::cout << "self loop is active!" << std::endl;
+            std::cout << "self loop is active!" << std::endl;
 	
         if(directed)
             std::cout << "directed is active!" << std::endl;
@@ -1206,8 +1226,7 @@ int main(int argc, const char* argv[]) {
         cout << "Energy distribution is " << energy_dist;
         cout << " and activation energy dist is " << aener_dist << endl;
 
-
-   	    std::vector< pair<size_t, size_t> > edges, couples;
+        std::vector< pair<size_t, size_t> > edges, couples;
         create_pan_sinha(edges, N, M, h, m, r,allow_multiple,self_loop, directed);
         couple_pan_sinha(couples, C, edges, h, m, r, limit_coupling, allow_multiple, self_loop, directed);
 	    
@@ -1219,36 +1238,111 @@ int main(int argc, const char* argv[]) {
         for(size_t t=0; t<N; ++t) 
     	    rm_add_species(sp, t, energy_dist);    
 		
-		// Combine network link to "a+b->c+d"-reactions
-		for(size_t i=0; i<couples.size(); ++i) {
-		    size_t r1=couples[i].first;
-		    size_t r2=couples[i].second;
+        // Combine network link to "a+b->c+d"-reactions
+        for(size_t i=0; i<couples.size(); ++i) {
+            size_t r1=couples[i].first;
+            size_t r2=couples[i].second;
 		    
-		    size_t a(edges[r1].first), b(edges[r2].first), 
-			   c(edges[r1].second), d(edges[r2].second);
-			   
-	            // create reaction using the macro function
-		    rm_2to2rev(re, a, b, c, d, aener_dist);
+            size_t a(edges[r1].first), b(edges[r2].first), 
+                   c(edges[r1].second), d(edges[r2].second);
+		   
+            // create reaction using the macro function
+            rm_2to2rev(re, a, b, c, d, aener_dist);
 		    
-		    // removing links connected from the edge list
-		    edges.erase(edges.begin()+r2);
-		    edges.erase(edges.begin()+r1);		  
-		}
-		
+            // removing links connected from the edge list
+            edges.erase(edges.begin()+r2);
+            edges.erase(edges.begin()+r1);		  
+        }	
     
-                // "Translate" all those unary reactions ("A->B")
-		for(size_t t=0; t<edges.size(); ++t) {
-		    size_t a(edges[t].first), b(edges[t].second);
+        // "Translate" all those unary reactions ("A->B")
+        for(size_t t=0; t<edges.size(); ++t) {
+            size_t a(edges[t].first), b(edges[t].second);
 			   
-	            // create reaction using the macro function
-		    rm_1to1rev(re, a, b, aener_dist);
-		}
+            // create reaction using the macro function
+            rm_1to1rev(re, a, b, aener_dist);
+        }
+			
+        write_jrnf_reaction_n(out, sp, re);	         
+    }
+
+
+    /*
+     * Creates a simple modular network  with <m> modules and couples the linear 
+     * reactions (A -> B) to a reaction network with nonlinear reactions.
+     */
+ 
+    if(cl.have_param("create_SM_NMmr_bi_C")) {
+        size_t N=cl.get_param_i("N");
+    	size_t M=cl.get_param_i("M");
+        size_t m=cl.get_param_i("m");
+        double r=cl.get_param_d("r");
+        size_t C=cl.get_param_i("C");
+        std::string out= cl.have_param("out") ? cl.get_param("out") : "SM_NMmr_bi_C_network.jrnf";
+        bool self_loop=cl.have_param("self_loop");
+        bool directed=cl.have_param("directed");
+        bool allow_multiple=cl.have_param("allow_multiple");
+        bool limit_coupling=cl.have_param("limit_coupling");
+      
+        std::cout << "mode: create_PS_NMhmr_bi_C   N=" << N << "   M=" << M;
+        std::cout << "   m=" << m << "   r=" << r;
+        std::cout << "  C=" << C << "   out=" << out << std::endl;
+	
+	
+        if(self_loop)
+            std::cout << "self loop is active!" << std::endl;
+	
+        if(directed)
+            std::cout << "directed is active!" << std::endl;
+	
+        if(allow_multiple)
+            std::cout << "allow multiple is active!" << std::endl;
+
+        if(limit_coupling)
+            std::cout << "limit coupling is active!" << std::endl;
+
+        std::vector< pair<size_t, size_t> > edges, couples;
+        create_simple_modular(edges, N, M, m, r,allow_multiple,self_loop, directed);
+        couple_simple_modular(couples, C, edges, m, r, limit_coupling, allow_multiple, self_loop, directed);
+	    
+        vector<species> sp;
+        vector<reaction> re;
+		
+        cout << "Output!" << std::endl;  
+
+        for(size_t t=0; t<N; ++t) 
+    	    rm_add_species(sp, t, 0);    
+		
+        // Combine network link to "a+b->c+d"-reactions
+        for(size_t i=0; i<couples.size(); ++i) {
+            size_t r1=couples[i].first;
+            size_t r2=couples[i].second;
+		    
+            size_t a(edges[r1].first), b(edges[r2].first), 
+                   c(edges[r1].second), d(edges[r2].second);
+		   
+            // create reaction using the macro function
+            rm_2to2rev(re, a, b, c, d, 0);
+		    
+            // removing links connected from the edge list
+            edges.erase(edges.begin()+r2);
+            edges.erase(edges.begin()+r1);		  
+        }	
+    
+        // "Translate" all those unary reactions ("A->B")
+        for(size_t t=0; t<edges.size(); ++t) {
+            size_t a(edges[t].first), b(edges[t].second);
+			   
+            // create reaction using the macro function
+            rm_1to1rev(re, a, b, 0);
+        }
 			
         write_jrnf_reaction_n(out, sp, re);	         
     }
     
     
-        
+    /*
+     * Output of usage instructions by calling program with parameter 'help' or 'info'
+     */
     
     if(cl.have_param("help") || cl.have_param("info")) {
         cout << "          Network tools" << endl;  
@@ -1256,28 +1350,28 @@ int main(int argc, const char* argv[]) {
         cout << " call with parameter 'info' or 'help' for showing this screen" << endl;
         cout << endl;
         cout << "-> create_test_network" << endl;
-	    cout << " Creates a small test network in 'test.jrnf'" << endl;
-	    cout << endl;
-	    cout << "-> create_test_network2" << endl;
-	    cout << " Creates a small test network in 'test2.jrnf'" << endl;
-	    cout << endl;
-	    cout << "-> print_network" << endl;
-	    cout << " Load a jrnf-file and print its reactions to the screen" << endl;
+        cout << " Creates a small test network in 'test.jrnf'" << endl;
+        cout << endl;
+        cout << "-> create_test_network2" << endl;
+        cout << " Creates a small test network in 'test2.jrnf'" << endl;
+        cout << endl;
+        cout << "-> print_network" << endl;
+        cout << " Load a jrnf-file and print its reactions to the screen" << endl;
         cout << " --> in - Name of jrnf-file to print" << endl;
-	    cout << endl;
-	    cout << "-> translate_jrnf_sbml" << endl;
-	    cout << " Reads a jrnf-file and writes it as sbml" << endl;
-	    cout << " --> in - input file" << endl;
-	    cout << " --> out - output file" << endl;
-	    cout << endl;
-	    cout << "-> transform_rm_species_r, transform_rm_species_s" << endl;
-	    cout << " Transforms a reaction network, removing on species. Either all" << endl;
-	    cout << " reactions containing the species are removed ('_r') or only" << endl;
-	    cout << " the species is removed from these reactions ('_s')." << endl;
-	    cout << " --> in - input file" << endl;
-	    cout << " --> out - output file" << endl;
-	    cout << " --> sp - name of the species to be removed" << endl;
-	    cout << endl;
+        cout << endl;
+        cout << "-> translate_jrnf_sbml" << endl;
+        cout << " Reads a jrnf-file and writes it as sbml" << endl;
+        cout << " --> in - input file" << endl;
+        cout << " --> out - output file" << endl;
+        cout << endl;
+        cout << "-> transform_rm_species_r, transform_rm_species_s" << endl;
+        cout << " Transforms a reaction network, removing on species. Either all" << endl;
+        cout << " reactions containing the species are removed ('_r') or only" << endl;
+        cout << " the species is removed from these reactions ('_s')." << endl;
+        cout << " --> in - input file" << endl;
+        cout << " --> out - output file" << endl;
+        cout << " --> sp - name of the species to be removed" << endl;
+        cout << endl;
         cout << "-> create_ER_NM, create_BA_NM, create_WS_NMbeta, create_PS_NMhmr " << endl;
         cout << "-> create_ER_NM_bi_C, create_BA_NM_bi_C, create_WS_NMbeta_biC," << endl;
         cout << "-> create_PS_NMhmr_bi_C " << endl;
@@ -1287,22 +1381,21 @@ int main(int argc, const char* argv[]) {
         cout << " --> N - Number of edges" << endl;
         cout << " --> M - Number of links" << endl;
         cout << " --> C - Number of link-pairs that are coupled" << endl;
-	    cout << " --> out - Output filename" << endl;
-	    cout << " --> ensure_connect - repeate until network is connected" << endl;
-	    cout << " --> self_loop - allow self loops (if possible)" << endl;
-	    cout << " --> directed - generate directed network" << endl;
-	    cout << " --> allow_multiple - allow multiple occurence of link" << endl;
-	    cout << " --> drop_minor - drop parts that are not strongly connected" << endl;
-	    cout << " --> beta - parameter for Watz Strogatz model" << endl;
-	    cout << " --> h - number of upper hierarchic level (PS)" << endl;
-	    cout << " --> m - size of 2. level modules (PS)" << endl;
-	    cout << " --> r - decrease of connectivity per level (PS)" << endl;
-	    cout << endl;
-	    cout << "-> create_Yung_DeMore, create_Krasnopolsky_2007_2012, create_Krasnopolsky_2012," << endl;
-	    cout << "   create_Krasnopolsky_2007, create_Hadac_2011, create_Kasting_1985" << endl;
-	    cout << " Create the according network model." << endl;
+        cout << " --> out - Output filename" << endl;
+        cout << " --> self_loop - allow self loops (if possible)" << endl;
+        cout << " --> directed - generate directed network" << endl;
+        cout << " --> allow_multiple - allow multiple occurence of link" << endl;
+        cout << " --> limit_coupling - coupling linear reactions with model specific constraints" << endl;
+        cout << " --> beta - parameter for Watz Strogatz model" << endl;
+        cout << " --> h - number of upper hierarchic level (PS)" << endl;
+        cout << " --> m - size of 2. level modules (PS)" << endl;
+        cout << " --> r - decrease of connectivity per level (PS)" << endl;
+        cout << endl;
+        cout << "-> create_Yung_DeMore, create_Krasnopolsky_2007_2012, create_Krasnopolsky_2012," << endl;
+        cout << "   create_Krasnopolsky_2007, create_Hadac_2011, create_Kasting_1985" << endl;
+        cout << " Create the according network model." << endl;
         cout << " --> out - File the reaction network is written to (jrnf-format)" << endl;
-	    cout << endl;
+        cout << endl;
     }    
     
       

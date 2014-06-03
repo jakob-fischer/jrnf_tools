@@ -1,7 +1,65 @@
+/* author: jakob fischer (jakob@automorph.info)
+ * date: 15th April 2014
+ * description: 
+ * Code to create files containing topological information on different types of complex networks
+ * This is ugly / but historically grown :-/
+ */
+
 #ifndef BUILD_NETWORKS_MODELS_H
 #define BUILD_NETWORKS_MODELS_H
 
 #include "reaction_network.h"
+
+
+void build_model_test_alpha_1(std::vector<species> &sp, std::vector<reaction> &re) {
+    sp.push_back(species(sp.size(), "A_1"));
+    size_t iA_1=0;
+    sp.push_back(species(sp.size(), "A_2"));
+    size_t iA_2=1;
+    sp.push_back(species(sp.size(), "A_3"));
+    size_t iA_3=2;
+    sp.push_back(species(sp.size(), "A_4"));
+    size_t iA_4=3;
+    sp.push_back(species(sp.size(), "A_5"));
+    size_t iA_5=4;
+    sp.push_back(species(sp.size(), "A_6"));
+    size_t iA_6=5;
+
+    re.push_back(reaction());
+    re.back().add_educt(iA_1, 1);
+    re.back().add_product(iA_6, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iA_6, 1);
+    re.back().add_product(iA_2, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iA_1, 1);
+    re.back().add_product(iA_4, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iA_5, 1);
+    re.back().add_product(iA_4, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iA_5, 1);
+    re.back().add_product(iA_2, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iA_1, 1);
+    re.back().add_product(iA_3, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iA_3, 1);
+    re.back().add_product(iA_2, 1);
+
+    re.push_back(reaction());
+    re.back().add_educt(iA_1, 1);
+    re.back().add_educt(iA_4, 1);
+    re.back().add_product(iA_5, 1);
+    re.back().add_product(iA_3, 1);
+}
+
 
 
 void build_model_2box_cli_H2O_C(std::vector<species> &sp, std::vector<reaction> &re) {
@@ -1302,6 +1360,11 @@ void build_model_Duncan_Chameides_org(std::vector<species> &sp, std::vector<reac
 }
 
 
+
+/*
+ *  Reaction network for Earth's atmosphere (photochemistry)
+ *  from Yung, DeMoore's book
+ */
 
 
 void build_model_Yung_99(std::vector<species> &sp, std::vector<reaction> &re) {
@@ -8657,6 +8720,7 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
     re.back().add_educt(iM, 1);
     re.back().add_product(iH2CO, 1);
     re.back().add_product(iOH, 1);
+    re.back().add_product(iM, 1);
   
     // R68
     re.push_back(reaction()); 
@@ -8966,7 +9030,8 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
     re.back().add_educt(iM, 1);
     re.back().add_product(iCH3, 1);
     re.back().add_product(iHCO, 1);
-    re.back().add_product(iOH, 1);  
+    re.back().add_product(iOH, 1); 
+    re.back().add_product(iM, 1); 
 
     // R111
     re.push_back(reaction()); 
@@ -10325,7 +10390,7 @@ void build_model_Kasting_359(std::vector<species> &sp, std::vector<reaction> &re
     re.back().add_educt(iM, 1);
     re.back().add_product(iCH3, 1);
     re.back().add_product(iC2H2, 1);
-    re.back().add_educt(iM, 1);  
+    re.back().add_product(iM, 1);  
 
     // R304
     re.push_back(reaction()); 

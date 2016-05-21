@@ -17,7 +17,6 @@
 
 #include "net_tools/reaction_network.h"
 #include "net_tools/reaction_network_fileop.h"
-#include "net_tools/build_network_models.h"
 #include "net_tools/network_tools.h"
 #include "tools/cl_para.h"
 using namespace std;
@@ -184,192 +183,6 @@ int main(int argc, const char* argv[]) {
 
     cl_para cl(argc, argv);  
 
-
-    /*
-     * Creates the reaction network of carbon3way-model
-     */
-    
-    if(cl.have_param("create_2box_cli_H2O_C")) {
-        std::cout << "mode: create_2box_cli_H2O_C" << std::endl;
-      
-        std::vector<species> sp;  
-	std::vector<reaction> re;
-	
-	build_model_2box_cli_H2O_C(sp, re);
-	
-        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
-    }
-    
-
-    /*
-     * Creates the reaction network of carbon3way-model
-     */
-    
-    if(cl.have_param("create_carbon3way")) {
-        std::cout << "mode: create_carbon3way" << std::endl;
-      
-        std::vector<species> sp;  
-	std::vector<reaction> re;
-	
-	build_model_carbon3way(sp, re);
-	
-        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
-    }
-
-
-    /*
-     * Creates the reaction network of 1box_cli_hyd-model
-     */
-    
-    if(cl.have_param("create_1box_cli_hyd")) {
-        std::cout << "mode: create_1box_cli_hyd" << std::endl;
-      
-        std::vector<species> sp;  
-	std::vector<reaction> re;
-	
-	build_model_1box_cli_hyd(sp, re);
-	
-        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
-    }
-
-
-    /*
-     * Creates the reaction network of 2box_cli_hyd-model
-     */
-    
-    if(cl.have_param("create_2box_cli_hyd")) {
-        std::cout << "mode: create_2box_cli_hyd" << std::endl;
-      
-        std::vector<species> sp;  
-	std::vector<reaction> re;
-	
-	build_model_2box_cli_hyd(sp, re);
-	
-        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
-    }
-
-
-    /*
-     * Creates the reaction network of 2box_cli_rad-model
-     */
-    
-    if(cl.have_param("create_2box_cli_rad")) {
-        std::cout << "mode: create_1box_cli_rad" << std::endl;
-      
-        std::vector<species> sp;  
-	std::vector<reaction> re;
-	
-	build_model_2box_cli_rad(sp, re);
-	
-        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
-    }
-
-
-    /*
-     * Function generates a small test network in jrnf-format
-     * and writes it to 'test.jrnf'
-     *
-     *  A      <--->    B 
-     *  C      <--->    E
-     *  A + C  <--->    2 B
-     *  D + B  <--->    2 D
-     *  F + E  <--->    A + C
-     */
-    
-    if(cl.have_param("create_test_network")) {
-        cout << "Creating test network in test.jrnf" << endl;
-	
-        std::vector<species> sp;  
-	    std::vector<reaction> re;
-      
-	    rm_add_species_ne(sp, "A");
-	    rm_add_species_ne(sp, "B");
-	    rm_add_species_ne(sp, "C");
-	    rm_add_species_ne(sp, "D");
-	    rm_add_species_ne(sp, "E");
-	    rm_add_species_ne(sp, "F");
-	    
-	    rm_1to1rev(re, 0, 1);
-	    rm_1to1rev(re, 2, 4);
-	    rm_2to2rev(re, 0, 2, 1, 1);
-	    rm_2to2rev(re, 3, 1, 3, 3);
-	    rm_2to2rev(re, 4, 5, 0, 2);
-	
-	    write_jrnf_reaction_n("test.jrnf", sp, re);
-    }
-
-
-
-
-    
-    
-    /*
-     * Function generates a small test network in jrnf-format
-     * and writes it to 'test2.jrnf'
-     *
-     * 2 A     ---->   B + C
-     *  B      ---->   E
-     * B + E   ---->   2 D
-     * 2 D     ---->   D + C
-     *  D + E  ---->    A + B
-     */
-    
-    if(cl.have_param("create_test_network2")) {
-        cout << "Creating test network in test2.jrnf" << endl;
-	
-        std::vector<species> sp;  
-	    std::vector<reaction> re;
-      
-	    rm_add_species_ne(sp, "A");
-	    rm_add_species_ne(sp, "B");
-	    rm_add_species_ne(sp, "C");
-	    rm_add_species_ne(sp, "D");
-	    rm_add_species_ne(sp, "E");
-	
-        rm_2to2(re, 0, 0, 1, 2);
-		rm_1to1(re, 1, 4);
-	    rm_2to2(re, 1, 4, 3, 3);
-	    rm_2to2(re, 3, 3, 3, 2);
-	    rm_2to2(re, 3, 4, 0, 1);
-	    
-	    write_jrnf_reaction_n("test2.jrnf", sp, re);
-    }
-    
    
     /*
      * Reads a jrnf-reaction network file and prints a textual
@@ -470,280 +283,55 @@ int main(int argc, const char* argv[]) {
 	    }      
       
       	cout << "Executing: transform_rm_species_r!" << endl;
-	    cout << " (removing a species from network - keep reduced reactions)" << endl;
-	    std::string in=cl.get_param("in");
-	    std::string out=cl.get_param("out");
-	    std::string sp_name=cl.get_param("sp");
-	    std::vector<species> sp, sp_out;
-	    std::vector<reaction> re, re_out;
+        cout << " (removing a species from network - keep reduced reactions)" << endl;
+        std::string in=cl.get_param("in");
+        std::string out=cl.get_param("out");
+        std::string sp_name=cl.get_param("sp");
+        std::vector<species> sp, sp_out;
+        std::vector<reaction> re, re_out;
+    
+        if(read_jrnf_reaction_n(in, sp, re)) {
+            cout << "Error at reading jrnf-file!" << std::endl;  
+            return 1;
+        }      
 	
-	    if(read_jrnf_reaction_n(in, sp, re)) {
-	        cout << "Error at reading jrnf-file!" << std::endl;  
-	        return 1;
-	    }      
-	
-	    filter_r_network_s(sp, re, sp_out, re_out, sp_name);
+        filter_r_network_s(sp, re, sp_out, re_out, sp_name);
 	
     	write_jrnf_reaction_n(out, sp_out, re_out);
     }   
-  
 
-    /*
-     * Creates a simple network to test algorithms and hypotheses.
-     */
-    
-    if(cl.have_param("create_test_alpha_1")) {
-        std::cout << "mode: create_test_alpha_1" << std::endl;
-      
-        std::vector<species> sp;  
-        std::vector<reaction> re;
-	
-         build_model_test_alpha_1(sp, re);
-	
-        cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-        if(cl.have_param("out")) {
-            std::string out=cl.get_param("out");
-            cout << "Writing jrnf-reaction network to " << out << endl;
-            write_jrnf_reaction_n(out, sp, re);
-        }
-    }
-
-
-
-
-    /*
-     * Creates the reaction network of the model of Nair
-     * and writes it in jrnf-format to the file given with 'out'.
-     */
-    
-    if(cl.have_param("create_Nair_1994")) {
-        std::cout << "mode: create_Yung_DeMore" << std::endl;
-      
-        std::vector<species> sp;  
-	    std::vector<reaction> re;
-	
-	    build_model_Nair_1994(sp, re);
-	
-	    cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing jrnf-reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
-    }
-
-
-    /*
-     * Creates the reaction network of the data gathered
-     * in the book of Yung and DeMore and writes it in
-     * jrnf-format to the file given with 'out'.
-     */
-    
-    if(cl.have_param("create_Yung_DeMore")) {
-        std::cout << "mode: create_Yung_DeMore" << std::endl;
-      
-        std::vector<species> sp;  
-	    std::vector<reaction> re;
-	
-	    build_model_Yung_99(sp, re);
-	
-	    cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing jrnf-reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
-    }
-    
     
     /*
-     * Creates the reaction network of the models of 
-     * Krasnopolsky (2007, 2012) for Venus and writes
-     * it in jrnf-format to the file given with 'out'.
+     * Combines two networks (in1, in2) and write result to jrnf-file (out). 
+     *
      */
     
-    if(cl.have_param("create_Krasnopolsky_2007_2012")) {
-        std::cout << "mode: create_Krasnopolsky_2007_2012" << std::endl;
+    if(cl.have_param("combine_networks")) {
+        std::cout << "mode: combine_networks" << std::endl;
       
+        if(!cl.have_param("in1") || !cl.have_param("in2") || !cl.have_param("out"))  {
+            cout << "You need to give parameters 'in1', 'in2' and 'out'! Could not proceed!" << endl;
+            return 1;  
+        }      
+
         std::vector<species> sp_1, sp_2, sp;  
-	    std::vector<reaction> re_1, re_2, re;
+        std::vector<reaction> re_1, re_2, re;
 	
-	    build_model_Krasnopolsky_2007(sp_1, re_1);
-	    build_model_Krasnopolsky_2012(sp_2, re_2);
+        std::string in1=cl.get_param("in1");
+        std::string in2=cl.get_param("in2");
+        
+        if(read_jrnf_reaction_n(in1, sp_1, re_1) || read_jrnf_reaction_n(in2, sp_2, re_2)) {
+            cout << "Error at reading jrnf-file!" << std::endl;  
+            return 1;
+        }     
 	
-	    combine_r_networks(sp_1, re_1, sp_2, re_2, sp, re);
+        combine_r_networks(sp_1, re_1, sp_2, re_2, sp, re);
 	
+        cout << "Combined network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
 	
-	    cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
-    }
-    
-    
-    /*
-     * Creates the reaction network of the model of 
-     * Krasnopolsky (2012) for Venus and writes
-     * it in jrnf-format to the file given with 'out'.
-     */
-	
-    if(cl.have_param("create_Krasnopolsky_2012")) {
-        std::cout << "mode: create_Krasnopolsky_2012" << std::endl;
-      
-        std::vector<species> sp;  
-	    std::vector<reaction> re;
-	
-	    build_model_Krasnopolsky_2012(sp, re);
-	
-	    cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }	
-    }
-    
-    
-    /*
-     * Creates the reaction network of the model of 
-     * Krasnopolsky (2007) for Venus and writes
-     * it in jrnf-format to the file given with 'out'.
-     */
-    
-    if(cl.have_param("create_Krasnopolsky_2007")) {
-        std::cout << "mode: create_Krasnopolsky_2007" << std::endl;    
-    
-        std::vector<species> sp;  
-    	std::vector<reaction> re;
-	
-	    build_model_Krasnopolsky_2007(sp, re);
-	
-	    cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
-	}
-	
-	
-    /*
-     * Creates the reaction network of the model used
-     * by Hadac (2011) and writes it in jrnf-format 
-     * to the file given with 'out'.
-     */   
-    
-    if(cl.have_param("create_Hadac_2011")) {
-        std::vector<species> sp;  
-	    std::vector<reaction> re;
-	
-	    build_model_Hadac_2011(sp, re);
-	
-	    cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	    if(cl.have_param("out")) {
-	        std::string out=cl.get_param("out");
-	        cout << "Writing reaction network to " << out << endl;
-	        write_jrnf_reaction_n(out, sp, re);
-	    }
-	}
-    
-
-
-    /*
-     * Creates the reaction network of the model of 
-     * Kasting (359 reactions) for Earth's atmosphere and writes
-     * it in jrnf-format to the file given with 'out'.
-     */  
-    
-    if(cl.have_param("create_Kasting_359")) {
-        std::vector<species> sp;  
-	std::vector<reaction> re;
-	
-	build_model_Kasting_359(sp, re);
-	
-	cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	if(cl.have_param("out")) {
-	    std::string out=cl.get_param("out");
-	    cout << "Writing reaction network to " << out << endl;
-	    write_jrnf_reaction_n(out, sp, re);
-	}
-    }
-
-
-    /*
-     * Creates the reaction network of the model of 
-     * Kasting (220 reactions) for Earth's atmosphere and writes
-     * it in jrnf-format to the file given with 'out'.
-     */  
-    
-    if(cl.have_param("create_Kasting_220")) {
-        std::vector<species> sp;  
-	std::vector<reaction> re;
-	
-	build_model_Kasting_220(sp, re);
-	
-	cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	if(cl.have_param("out")) {
-	    std::string out=cl.get_param("out");
-	    cout << "Writing reaction network to " << out << endl;
-	    write_jrnf_reaction_n(out, sp, re);
-	}
-    }
-    
-
-    /*
-     * Creates the reaction network of the model of 
-     * Kasting (1985) for Earths atmosphere and writes
-     * it in jrnf-format to the file given with 'out'.
-     */  
-    
-    if(cl.have_param("create_Kasting_1985")) {
-        std::vector<species> sp;  
-	std::vector<reaction> re;
-	
-	build_model_Kasting_1985(sp, re);
-	
-	cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	if(cl.have_param("out")) {
-	    std::string out=cl.get_param("out");
-	    cout << "Writing reaction network to " << out << endl;
-	    write_jrnf_reaction_n(out, sp, re);
-	}
-    }
-
-    /*
-     * Creates the reaction network of the model of 
-     * Duncan&Chameides and writes it in jrnf-format
-     * to the file given with 'out'.
-     */  
-
-    if(cl.have_param("create_Duncan_Chameides")) {
-        std::vector<species> sp;
-        std::vector<reaction> re;
-
-        build_model_Duncan_Chameides_org(sp, re);
-
-	cout << "Network having " << sp.size() << " species and " << re.size() << " reactions." << endl;
-	
-	if(cl.have_param("out")) {
-	    std::string out=cl.get_param("out");
-	    cout << "Writing reaction network to " << out << endl;
-	    write_jrnf_reaction_n(out, sp, re);
-	}    
-    
+        std::string out=cl.get_param("out");
+        cout << "Writing reaction network to " << out << endl;
+        write_jrnf_reaction_n(out, sp, re);
     }
 
     
@@ -1349,12 +937,6 @@ int main(int argc, const char* argv[]) {
         cout << "          ===============" << endl;
         cout << " call with parameter 'info' or 'help' for showing this screen" << endl;
         cout << endl;
-        cout << "-> create_test_network" << endl;
-        cout << " Creates a small test network in 'test.jrnf'" << endl;
-        cout << endl;
-        cout << "-> create_test_network2" << endl;
-        cout << " Creates a small test network in 'test2.jrnf'" << endl;
-        cout << endl;
         cout << "-> print_network" << endl;
         cout << " Load a jrnf-file and print its reactions to the screen" << endl;
         cout << " --> in - Name of jrnf-file to print" << endl;
@@ -1390,11 +972,6 @@ int main(int argc, const char* argv[]) {
         cout << " --> h - number of upper hierarchic level (PS)" << endl;
         cout << " --> m - size of 2. level modules (PS)" << endl;
         cout << " --> r - decrease of connectivity per level (PS)" << endl;
-        cout << endl;
-        cout << "-> create_Yung_DeMore, create_Krasnopolsky_2007_2012, create_Krasnopolsky_2012," << endl;
-        cout << "   create_Krasnopolsky_2007, create_Hadac_2011, create_Kasting_1985" << endl;
-        cout << " Create the according network model." << endl;
-        cout << " --> out - File the reaction network is written to (jrnf-format)" << endl;
         cout << endl;
     }    
     

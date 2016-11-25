@@ -1,1 +1,14 @@
-TODO
+author: jakob fischer (jakob@automorph.info)               date: 25th November 2016
+
+This tool enables the generation of reaction networks with different types of 
+specific complex network types. For this a c++ library locatet in the subdirectory
+"net_tools" is used. This library includes also a list of sample networks. For 
+details on the library look at the readme file locatet in "net_tools".
+
+For results generated with the help of this tool (and theoretical explanations)
+look at the following publication:
+  [FKD15] J Fischer, A Kleidon, and P Dittrich. “Thermodynam-
+          ics of Random Reaction Networks.” In: PLoS ONE 10.2
+          (2015), e0117312.
+
+

@@ -4,8 +4,8 @@
  * Programm with C++ Tools for generating different types of complex
  * networks / reaction networks and transforming between them.
  * 
- * TODO: Document. Handling of reversible reactions should be more clear...
- * TODO: Complex network generation of 2-2 networks should have virtual links included in connectivity check
+ * TODO: Complex network generation of 2-2 networks should have virtual links 
+ *       included in connectivity check
  */
 
 #include <iostream>
@@ -594,7 +594,7 @@ int main(int argc, const char* argv[]) {
 
     
     /*
-     * 
+     * Create Watz-Strogatz network with given number of edges and nodes.
      */
      
     if(cl.have_param("create_WS_NMalpha")) {
@@ -638,7 +638,7 @@ int main(int argc, const char* argv[]) {
     
     
     /*
-     * 
+     * Create Watz-Strogatz network and couple linear reactions to nonlinear 
      */
     
     if(cl.have_param("create_WS_NMalpha_bi_C")) {

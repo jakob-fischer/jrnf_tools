@@ -1,4 +1,6 @@
 author: jakob fischer (jakob@automorph.info)               date: 25th November 2016
+homepage: https://github.com/jakob-fischer/jrnf_tools
+-----------------------------------------------------------------------------------
 
 This tool enables the generation of reaction networks with different types of 
 specific complex network types. For this a c++ library locatet in the subdirectory

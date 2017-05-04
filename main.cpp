@@ -1,4 +1,4 @@
-/* author: jakob fischer (jakob@automorph.info)
+/* author: jakob fischer (mail@jakobfischer.eu)
  * date: 9th February 2013
  * description: 
  * Programm with C++ Tools for generating different types of complex
